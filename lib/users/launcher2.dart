@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:glowskin_project/constans.dart';
-import 'package:glowskin_project/users/landingpage.dart' as users;
+import 'package:glowskin_project/users/landingpage2.dart' as users;
 
-class LauncherPage extends StatefulWidget {
+class LauncherPage2 extends StatefulWidget {
   @override
-  State<LauncherPage> createState() => _LauncherPageState();
+  State<LauncherPage2> createState() => _LauncherPage2State();
 }
 
-class _LauncherPageState extends State<LauncherPage> {
+class _LauncherPage2State extends State<LauncherPage2> {
   @override
   void initState() {
     super.initState();
@@ -25,7 +25,7 @@ class _LauncherPageState extends State<LauncherPage> {
     var duration = const Duration(seconds: 2);
     return new Timer(duration, () {
       Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (_) {
-        return new users.LandingPage();
+        return new users.LandingPage2();
       }));
     });
   }
