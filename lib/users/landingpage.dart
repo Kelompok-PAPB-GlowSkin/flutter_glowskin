@@ -67,7 +67,7 @@ class _LandingPageState extends State<LandingPage> {
               onPressed: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return LauncherPage2();
+                  return LoginPage();
                 }));
               },
               child: Text(
