@@ -121,9 +121,11 @@ class _SignUpPageState extends State<SignUpPage> {
                       print(passwordController.text);
                       print(confirmPasswordController);                      
                     },
-                  )),
+                  )
+                  ),
             ],
-          )),
+          )
+          ),
     );
   }
 }
