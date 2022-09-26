@@ -69,95 +69,343 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(height: 44),
-              Row(
-                children: [
-                  Container(
-                    child: OutlinedButton(
-                      onPressed: () {},
-                      child: Text('All'),
-                      style: ButtonStyle(
-                          fixedSize: MaterialStateProperty.all(
-                            Size(53, 42),
-                          ),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                          ),
-                          side: MaterialStateProperty.all(BorderSide(
-                              color: Colors.black.withOpacity(0.25)))),
-                    ),
+              Container(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(right: 16),
+                        child: OutlinedButton(
+                          onPressed: () {},
+                          child: Text('All'),
+                          style: ButtonStyle(
+                              fixedSize: MaterialStateProperty.all(
+                                Size(53, 42),
+                              ),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              side: MaterialStateProperty.all(BorderSide(
+                                  color: Colors.black.withOpacity(0.25)))),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(right: 16),
+                        child: OutlinedButton(
+                          onPressed: () {},
+                          child: Text('Serum'),
+                          style: ButtonStyle(
+                              fixedSize: MaterialStateProperty.all(
+                                Size(87, 42),
+                              ),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              side: MaterialStateProperty.all(
+                                  BorderSide(color: Colors.black))),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(right: 16),
+                        child: OutlinedButton(
+                          onPressed: () {},
+                          child: Text('Toner'),
+                          style: ButtonStyle(
+                              fixedSize: MaterialStateProperty.all(
+                                Size(99, 42),
+                              ),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              side: MaterialStateProperty.all(BorderSide(
+                                  color: Colors.black.withOpacity(0.25)))),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(right: 16),
+                        child: OutlinedButton(
+                          onPressed: () {},
+                          child: Text('Essence'),
+                          style: ButtonStyle(
+                              fixedSize: MaterialStateProperty.all(
+                                Size(99, 42),
+                              ),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              side: MaterialStateProperty.all(BorderSide(
+                                  color: Colors.black.withOpacity(0.25)))),
+                        ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    child: OutlinedButton(
-                      onPressed: () {},
-                      child: Text('Serum'),
-                      style: ButtonStyle(
-                          fixedSize: MaterialStateProperty.all(
-                            Size(87, 42),
-                          ),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                          ),
-                          side: MaterialStateProperty.all(
-                              BorderSide(color: Colors.black))),
-                    ),
-                  ),
-                  Container(
-                    child: OutlinedButton(
-                      onPressed: () {},
-                      child: Text('Toner'),
-                      style: ButtonStyle(
-                          fixedSize: MaterialStateProperty.all(
-                            Size(99, 42),
-                          ),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                          ),
-                          side: MaterialStateProperty.all(BorderSide(
-                              color: Colors.black.withOpacity(0.25)))),
-                    ),
-                  ),
-                  Container(
-                    child: OutlinedButton(
-                      onPressed: () {},
-                      child: Text('Essence'),
-                      style: ButtonStyle(
-                          fixedSize: MaterialStateProperty.all(
-                            Size(99, 42),
-                          ),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                          ),
-                          side: MaterialStateProperty.all(BorderSide(
-                              color: Colors.black.withOpacity(0.25)))),
-                    ),
-                  ),
-                ],
+                ),
               ),
               SizedBox(height: 29),
               Container(
-                child: Row(
-                  children: [
-                    Container(
-                      child: Row(
-                        children: [
-                          Text(
-                            'Serum',
-                            style: TextStyle(fontSize: 20),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              )
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(children: [
+                        Container(
+                          child: Row(
+                            children: [
+                              Container(
+                                  width: 208,
+                                  height: 349,
+                                  margin: const EdgeInsets.only(right: 20),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFD9D9D9),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 240,
+                                        margin: const EdgeInsets.only(
+                                            left: 10, top: 33, bottom: 18),
+                                        child: Row(
+                                          children: [
+                                            RotatedBox(
+                                              quarterTurns: -45,
+                                              child: Text(
+                                                'Serum',
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                            ),
+                                            Image.asset(
+                                              'assets/product.png',
+                                              fit: BoxFit.cover,
+                                              alignment:
+                                                  new Alignment(-4.0, -1.0),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: 129,
+                                            height: 51,
+                                            margin:
+                                                const EdgeInsets.only(left: 10),
+                                            child: ElevatedButton(
+                                              onPressed: () {},
+                                              child: Text(
+                                                'Detail',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.white,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25))),
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                left: 6, right: 10),
+                                            height: 53,
+                                            child: SizedBox.fromSize(
+                                              size: Size(53, 53),
+                                              child: ClipOval(
+                                                  child: Material(
+                                                color: Colors.black,
+                                                child: InkWell(
+                                                  onTap: () {},
+                                                  child: Icon(
+                                                    Icons.favorite,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              )),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  )),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: Row(
+                            children: [
+                              Container(
+                                  width: 208,
+                                  height: 349,
+                                  margin: const EdgeInsets.only(right: 20),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFD9D9D9),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 240,
+                                        margin: const EdgeInsets.only(
+                                            left: 10, top: 33, bottom: 18),
+                                        child: Row(
+                                          children: [
+                                            RotatedBox(
+                                              quarterTurns: -45,
+                                              child: Text(
+                                                'Serum',
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                            ),
+                                            Image.asset(
+                                              'assets/product.png',
+                                              fit: BoxFit.cover,
+                                              alignment:
+                                                  new Alignment(-4.0, -1.0),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: 129,
+                                            height: 51,
+                                            margin:
+                                                const EdgeInsets.only(left: 10),
+                                            child: ElevatedButton(
+                                              onPressed: () {},
+                                              child: Text(
+                                                'Detail',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.white,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25))),
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                left: 6, right: 10),
+                                            height: 53,
+                                            child: SizedBox.fromSize(
+                                              size: Size(53, 53),
+                                              child: ClipOval(
+                                                  child: Material(
+                                                color: Colors.black,
+                                                child: InkWell(
+                                                  onTap: () {},
+                                                  child: Icon(
+                                                    Icons.favorite,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              )),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  )),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: Row(
+                            children: [
+                              Container(
+                                  width: 208,
+                                  height: 349,
+                                  margin: const EdgeInsets.only(right: 20),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFD9D9D9),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 240,
+                                        margin: const EdgeInsets.only(
+                                            left: 10, top: 33, bottom: 18),
+                                        child: Row(
+                                          children: [
+                                            RotatedBox(
+                                              quarterTurns: -45,
+                                              child: Text(
+                                                'Serum',
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                            ),
+                                            Image.asset(
+                                              'assets/product.png',
+                                              fit: BoxFit.cover,
+                                              alignment:
+                                                  new Alignment(-4.0, -1.0),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: 129,
+                                            height: 51,
+                                            margin:
+                                                const EdgeInsets.only(left: 10),
+                                            child: ElevatedButton(
+                                              onPressed: () {},
+                                              child: Text(
+                                                'Detail',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.white,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25))),
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                left: 6, right: 10),
+                                            height: 53,
+                                            child: SizedBox.fromSize(
+                                              size: Size(53, 53),
+                                              child: ClipOval(
+                                                  child: Material(
+                                                color: Colors.black,
+                                                child: InkWell(
+                                                  onTap: () {},
+                                                  child: Icon(
+                                                    Icons.favorite,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              )),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ]))),
+              SizedBox(height: 26)
             ],
           )),
     );
