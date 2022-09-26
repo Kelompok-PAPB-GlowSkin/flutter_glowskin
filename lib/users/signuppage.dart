@@ -15,6 +15,97 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
+  String nama = '';
+  String email = '';
+  String password = '';
+  String confirmPassword = '';
+
+  _SignUpPageState() {
+    nameController.addListener(() {
+      setState(() {
+        nama = nameController.text;
+      });
+    });
+    emailController.addListener(() {
+      setState(() {
+        email = emailController.text;
+      });
+    });
+    passwordController.addListener(() {
+      setState(() {
+        password = passwordController.text;
+      });
+    });
+    confirmPasswordController.addListener(() {
+      setState(() {
+        confirmPassword = confirmPasswordController.text;
+      });
+    });
+  }
+
+  void _usernameListen(){
+    if(nameController.text.isEmpty){
+      nama = '';
+    }else{
+      nama = nameController.text;
+    }
+  }
+
+  void _emailListen(){
+    if(emailController.text.isEmpty){
+      email = '';
+    }else{
+      email = emailController.text;
+    }
+  }
+
+  void _passwordListen(){
+    if(passwordController.text.isEmpty){
+      password = '';
+    }else{
+      password = passwordController.text;
+    }
+  }
+
+  void _confirmPasswordListen(){
+    if(confirmPasswordController.text.isEmpty){
+      confirmPassword = '';
+    }else{
+      confirmPassword = confirmPasswordController.text;
+    }
+  }
+
+  SignUp(BuildContext context) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text("Sign Up"),
+      actions: [
+        if(nama == '' || email == '' || password == '' || confirmPassword == '')
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("OK"),
+          ),
+        if(nama != '' && email != '' && password != '' && confirmPassword != '')
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("OK"),
+          ),
+      ],
+      content: (nama == '' || email == '' || password == '' || confirmPassword == '')
+          ? Text("Harap mengisi form dengan benar")
+          : Text("Sign Up berhasil"),
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alertDialog;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,10 +203,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return LauncherPage2();
-                      }));
+                      SignUp(context);
                       print(nameController.text);
                       print(emailController.text);
                       print(passwordController.text);
