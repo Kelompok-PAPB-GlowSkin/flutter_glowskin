@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:glowskin_project/users/launcher2.dart';
 import 'package:glowskin_project/users/loginpage.dart';
+import 'package:glowskin_project/users/signuppage.dart';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -90,7 +91,12 @@ class _LandingPageState extends State<LandingPage> {
             width: 100,
             height: 40,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return SignUpPage();
+                }));
+              },
               child: Text(
                 'Sign Up',
                 style: TextStyle(color: Colors.white, fontSize: 18),
