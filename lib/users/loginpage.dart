@@ -114,9 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                 )),
               ),
               Container(
-                padding: const EdgeInsets.all(10),
-                height: SizeConfig().heightSize(context, 0.1),
-                width: SizeConfig().widthSize(context, 0.8),
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                 child: TextField(
                   controller: nameController,
                   decoration: const InputDecoration(
@@ -129,8 +127,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                height: SizeConfig().heightSize(context, 0.1),
-                width: SizeConfig().widthSize(context, 0.8),
                 child: TextField(
                   obscureText: true,
                   controller: passwordController,
