@@ -9,6 +9,8 @@ class LandingPage extends StatefulWidget {
   State<LandingPage> createState() => _LandingPageState();
 }
 
+
+
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
@@ -72,7 +74,7 @@ class _LandingPageState extends State<LandingPage> {
               },
               child: Text(
                 'Login',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xff51AD99),
@@ -82,16 +84,16 @@ class _LandingPageState extends State<LandingPage> {
               ),
             ),
           ),
-          SizedBox(height: 13),
+          SizedBox(height: 5),
           Container(
             alignment: Alignment.center,
-            width: 125,
+            width: 100,
             height: 40,
             child: ElevatedButton(
               onPressed: () {},
               child: Text(
                 'Sign Up',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xff51AD99),

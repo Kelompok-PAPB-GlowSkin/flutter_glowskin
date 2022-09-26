@@ -9,9 +9,80 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
+class SizeConfig{
+  double heightSize(BuildContext context, double size){
+    return MediaQuery.of(context).size.height * size;
+  }
+  double widthSize(BuildContext context, double size){
+    return MediaQuery.of(context).size.width * size;
+  }
+}
+
 class _LoginPageState extends State<LoginPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  String _email = "";
+  String _password = "";
+
+  _LoginPageState() {
+    nameController.addListener(() {
+      setState(() {
+        _email = nameController.text;
+      });
+    });
+    passwordController.addListener(() {
+      setState(() {
+        _password = passwordController.text;
+      });
+    });
+  }
+
+  void _emailListen() {
+    if (nameController.text.isEmpty) {
+      _email = "";
+    } else {
+      _email = nameController.text;
+    }
+  }
+
+  void _passwordListen() {
+    if (passwordController.text.isEmpty) {
+      _password = "";
+    } else {
+      _password = passwordController.text;
+    }
+  }
+
+  Login(BuildContext context) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text("Login"),
+      actions: [
+        if (_email == "admin" && _password == "admin")
+          ElevatedButton(
+            onPressed: () {Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (_) {
+              return new LandingPage2();
+            }));},
+            child: Text("OK"),
+          ),
+        if (_email != "admin" || _password != "admin")
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("OK"),
+          ),
+      ],
+      content: (_email == "admin" && _password == "admin")
+          ? Text("Login Berhasil, Selamat Datang di GlowSkin") 
+          : Text("Login Gagal, Silahkan isi email dan password dengan benar"),
+    ); 
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alertDialog;
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,18 +115,22 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Container(
                 padding: const EdgeInsets.all(10),
+                height: SizeConfig().heightSize(context, 0.1),
+                width: SizeConfig().widthSize(context, 0.8),
                 child: TextField(
                   controller: nameController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30)),
                     ),
-                    labelText: 'User Name',
+                    labelText: 'Email',
                   ),
                 ),
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                height: SizeConfig().heightSize(context, 0.1),
+                width: SizeConfig().widthSize(context, 0.8),
                 child: TextField(
                   obscureText: true,
                   controller: passwordController,
@@ -85,10 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return LauncherPage2();
-                      }));
+                      Login(context);
                       print(nameController.text);
                       print(passwordController.text);
                     },
