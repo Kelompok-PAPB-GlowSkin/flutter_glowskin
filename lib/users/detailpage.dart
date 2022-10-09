@@ -2,7 +2,6 @@ import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:glowskin_project/model/product.dart';
 
 class DetailPage extends StatelessWidget {

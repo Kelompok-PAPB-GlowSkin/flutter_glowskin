@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:glowskin_project/users/launcher2.dart';
 import 'package:glowskin_project/users/loginpage.dart';
 import 'package:glowskin_project/users/signuppage.dart';
