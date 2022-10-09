@@ -81,24 +81,6 @@ class _FavoritePageState extends State<FavoritePage> {
                               ],
                             ),
                           ),
-                          Container(
-                            margin: const EdgeInsets.only(
-                              left: 76, right: 10),
-                            height: 43,
-                            child: SizedBox.fromSize(
-                              size: Size(43, 33),
-                              child: ClipOval(
-                                  child: Material(
-                                color: Color.fromARGB(255, 139, 1, 1),
-                                child: InkWell(
-                                  onTap: () {},
-                                  child: Icon(
-                                    Icons.remove,
-                                    color: Colors.white,
-                                    size: 33,
-                                    ),),
-                                    )),
-                                    ),)
                         ],
                       ),
                     )
