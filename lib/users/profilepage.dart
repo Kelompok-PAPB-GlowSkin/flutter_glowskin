@@ -10,16 +10,7 @@ class _ProfilPageState extends State<ProfilPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            child: ListView.builder(
-                itemCount: productList.length,
-                itemBuilder: (context, index) {
-                  Product product = productList[index];
-                  return Container(
-                      child: ListTile(
-                    title: Text(product.name),
-                    leading: Image.network(product.imageUrl),
-                  ));
-                })));
+        body: Text('Profil Page'),
+        );
   }
 }
