@@ -30,6 +30,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   email_validator: '^1.0.0'
+  editable_image: ^0.1.0
   sizer: ^2.0.15
   flutter:
     sdk: flutter
