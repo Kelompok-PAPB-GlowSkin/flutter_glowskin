@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:glowskin_project/model/cardproduct.dart';
+import 'package:glowskin_project/unused/cardproduct.dart';
 import 'package:glowskin_project/model/product.dart';
 import 'package:glowskin_project/users/detailpage.dart';
 import 'package:glowskin_project/users/profilepage.dart';
