@@ -12,10 +12,10 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text(
-        'Detail',
-      )),
+      // appBar: AppBar(
+      //     title: Text(
+      //   'Detail',
+      // )),
       body: Padding(
         padding: const EdgeInsets.only(top: 30),
         child: SingleChildScrollView(
@@ -28,6 +28,58 @@ class DetailPage extends StatelessWidget {
                 child: Column(
                   // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                      width: 340,
+                      height: 50,
+                      margin: const EdgeInsets.only(bottom: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            child: OutlinedButton(
+                              onPressed: () {},
+                              child: Icon(
+                                Icons.arrow_back,
+                                color: Colors.black,
+                                size: 24,
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30)),
+                                  side: BorderSide(
+                                      color: Color(0xFFEDEEF3), width: 2)),
+                            ),
+                          ),
+                          Text(
+                            'Detail',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          Container(
+                            width: 50,
+                            height: 50,
+                            child: OutlinedButton(
+                              onPressed: () {},
+                              child: Icon(
+                                Icons.favorite_outline,
+                                color: Colors.black,
+                                size: 23,
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30)),
+                                  side: BorderSide(
+                                      color: Color(0xFFEDEEF3), width: 2)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     Container(
                         width: 340,
                         height: 380,
