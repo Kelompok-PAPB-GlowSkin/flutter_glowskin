@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:glowskin_project/users/landingpage2.dart';
-import 'package:glowskin_project/users/launcher2.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'dart:io';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -22,68 +25,78 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  String _email = "";
-  String _password = "";
+  String email = "";
+  String password = "";
 
   _LoginPageState() {
     nameController.addListener(() {
       setState(() {
-        _email = nameController.text;
+        email = nameController.text;
       });
     });
     passwordController.addListener(() {
       setState(() {
-        _password = passwordController.text;
+        password = passwordController.text;
       });
     });
   }
 
-  void _emailListen() {
-    if (nameController.text.isEmpty) {
-      _email = "";
-    } else {
-      _email = nameController.text;
-    }
-  }
+  String url =  Platform.isAndroid ? 'http://192.168.137.33:3001' : 'http://localhost:3001';
 
-  void _passwordListen() {
-    if (passwordController.text.isEmpty) {
-      _password = "";
-    } else {
-      _password = passwordController.text;
-    }
-  }
-
-  Login(BuildContext context) {
-    AlertDialog alertDialog = AlertDialog(
-      title: Text("Login"),
-      actions: [
-        if (_email == "admin" && _password == "admin")
-          ElevatedButton(
-            onPressed: () {Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (_) {
-              return new LandingPage2();
-            }));},
-            child: Text("OK"),
-          ),
-        if (_email != "admin" || _password != "admin")
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
+  Future<void> login() async {
+    try {
+      var response = await Dio().post(
+        url + '/user/login',
+        data: {
+          "email": email,
+          "password": password,
+        },
+      );
+      print(response.data);
+      AlertDialog alert = AlertDialog(
+        title: Text("Login"),
+        content: Text(response.data['message']),
+        actions: [
+          TextButton(
+          onPressed: () {
+            Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (_) {
+                return new LandingPage2();
+              }));
             },
             child: Text("OK"),
           ),
-      ],
-      content: (_email == "admin" && _password == "admin")
-          ? Text("Login Berhasil, Selamat Datang di GlowSkin") 
-          : Text("Login Gagal, Silahkan isi email dan password dengan benar"),
-    ); 
-    showDialog(
+        ],
+      );
+      showDialog(
         context: context,
         builder: (BuildContext context) {
-          return alertDialog;
-        });
+          return alert;
+        },
+      );
+    } catch (e) {
+      print(e);
+      if (e is DioError) {
+        AlertDialog alert = AlertDialog(
+          title: Text("Login"),
+          content: Text(e.response!.data['error']['message'].toString()),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
+    }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     onPressed: () {
-                      Login(context);
+                      login();
                       print(nameController.text);
                       print(passwordController.text);
                     },
