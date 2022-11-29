@@ -1,10 +1,12 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:glowskin_project/unused/cardproduct.dart';
 import 'package:glowskin_project/model/product.dart';
 import 'package:glowskin_project/users/detailpage.dart';
 import 'package:glowskin_project/users/profilepage.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'dart:io';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,15 +14,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final String url = 'http://10.0.2.2:8000/api/products';
+  String url = Platform.isAndroid ? "http://192.168.1.234:3001" : 'http://localhost:3001';
 
   Future getProducts() async {
-    var response = await http.get(Uri.parse(url));
-    print(json.decode(response.body));
-    return json.decode(response.body);
+    var response = await Dio().get(url+'/product/get-all-product');
+    try {
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
   }
+
   @override
   Widget build(BuildContext context) {
+    getProducts();
     return Scaffold(
       body: ListView(
         children: [
@@ -185,23 +196,25 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(height: 20),
                       Container(
-                          height: 360,
-                          child: FutureBuilder(
-                            future: getProducts(),
-                            builder: (context, snapshot){
-                              if(snapshot.hasData){
-                                return ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: snapshot.data['data'].length,
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      width: 208,
-                                      height: 349,
-                                      margin: const EdgeInsets.only(right: 20),
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFD9D9D9),
-                                        borderRadius: BorderRadius.circular(20)),
-                                      child: Column(children: [
+                        height: 360,
+                        child: FutureBuilder(
+                          future: getProducts(),
+                          builder: (context, snapshot) {
+                            if(snapshot.hasData){
+                              return ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data['products'].length,
+                                itemBuilder: (context,index){
+                                  return Container(
+                                    width: 208,
+                                    height: 349,
+                                    margin: const EdgeInsets.only(right: 20),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFD9D9D9),
+                                      borderRadius: BorderRadius.circular(20)
+                                    ),
+                                    child: Column(
+                                      children: [
                                         Container(
                                           height: 240,
                                           margin: const EdgeInsets.only(top: 33, left: 10, right: 15, bottom: 18),
@@ -211,19 +224,19 @@ class _HomePageState extends State<HomePage> {
                                               RotatedBox(
                                                 quarterTurns: -45,
                                                 child: Text(
-                                                  snapshot.data['data'][index]['nama_barang'],
+                                                  snapshot.data['products'][index]['nama_barang'],
                                                   style: TextStyle(
                                                     fontSize: 20,
                                                   ),
-                                                ),
+                                                ), 
                                               ),
                                               Expanded(
                                                 child: Image.network(
-                                                  snapshot.data['data'][index]['foto_produk'],
+                                                  snapshot.data['products'][index]['foto_barang'],
                                                   fit: BoxFit.cover,
                                                   alignment: (Alignment(-4.0, -1.0)),
                                                 ),
-                                              ),
+                                              )
                                             ],
                                           ),
                                         ),
@@ -235,18 +248,18 @@ class _HomePageState extends State<HomePage> {
                                               margin: const EdgeInsets.only(left: 10),
                                               child: ElevatedButton(
                                                 onPressed: () {},
-                                                child: Text('Detail',
-                                                  style: TextStyle(
-                                                    color: Colors.black,
+                                                child: Text('Detail', 
+                                                style: TextStyle(
+                                                  color: Colors.black
                                                   ),
                                                 ),
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.white,
+                                                  primary: Colors.white,
                                                   shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(25),
+                                                    borderRadius: BorderRadius.circular(25)
                                                   ),
-                                                )
-                                              )
+                                                ),
+                                              ),
                                             ),
                                             Container(
                                               margin: const EdgeInsets.only(left: 6, right: 10),
@@ -257,26 +270,31 @@ class _HomePageState extends State<HomePage> {
                                                   child: Material(
                                                     color: Colors.black,
                                                     child: InkWell(
-                                                      onTap: (){},
-                                                      child : Icon(
+                                                      onTap: (() {}),
+                                                      child: Icon(
                                                         Icons.favorite,
                                                         color: Colors.white,
                                                       ),
                                                     ),
-                                                  )),
+                                                  ),
+                                                )
                                               ),
                                             )
                                           ],
                                         )
-                                      ]),
+                                      ],
+                                    ),
                                   );
-                                });
-                              }else{
-                                return Text("data gagal");
-                              }
-                            },
-                          )
+                                },
+                              );
+                            }else{
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
                         ),
+                      )
                     ],
                   ),
                 ),
