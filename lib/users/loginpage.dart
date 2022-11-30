@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  String url =  Platform.isAndroid ? 'http://192.168.137.37:3001' : 'http://localhost:3001';
+  String url =  Platform.isAndroid ? 'http://10.223.244.172:3001' : 'http://localhost:3001';
 
   Future login() async {
     try{
@@ -105,60 +105,6 @@ class _LoginPageState extends State<LoginPage> {
     print('ini email');
     print(prefs.getString('email'));
   }
-  // Future<void> login() async {
-  //   try {
-  //     var response = await Dio().post(
-  //       url + '/user/login',
-  //       data: {
-  //         "email": email,
-  //         "password": password,
-  //       },
-  //     );
-  //     print(response.data);
-  //     AlertDialog alert = AlertDialog(
-  //       title: Text("Login"),
-  //       content: Text(response.data['message']),
-  //       actions: [
-  //         TextButton(
-  //         onPressed: () {
-  //           Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (_) {
-  //               return new LandingPage2();
-  //             }));
-  //           },
-  //           child: Text("OK"),
-  //         ),
-  //       ],
-  //     );
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return alert;
-  //       },
-  //     );
-  //   } catch (e) {
-  //     print(e);
-  //     if (e is DioError) {
-  //       AlertDialog alert = AlertDialog(
-  //         title: Text("Login"),
-  //         content: Text(e.response!.data['error']['message'].toString()),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: Text("OK"),
-  //           ),
-  //         ],
-  //       );
-  //       showDialog(
-  //         context: context,
-  //         builder: (BuildContext context) {
-  //           return alert;
-  //         },
-  //       );
-  //     }
-  //   }
-  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glowskin_project/unused/cardproduct.dart';
 import 'package:glowskin_project/model/product.dart';
 import 'package:glowskin_project/users/detailpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:glowskin_project/users/profilepage.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -14,7 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String url = Platform.isAndroid ? "http://192.168.137.37:3001" : 'http://localhost:3001';
+  String url = Platform.isAndroid ? "http://10.223.244.172:3001" : 'http://localhost:3001';
 
   Future getProducts() async {
     var response = await Dio().get(url+'/product/get-all-product');
@@ -25,6 +26,23 @@ class _HomePageState extends State<HomePage> {
         return null;
       }
     } catch (e) {
+      return null;
+    }
+  }
+
+  Future getProductsID(id_barang) async {
+    try{
+      var dio = Dio();
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      SharedPreferences id = await SharedPreferences.getInstance();
+      id.setString('id', id_barang);
+      var response = await dio.get(url+'/product/get-product-by-id/$id_barang');
+      // print(response.data);
+      MaterialPageRoute route = MaterialPageRoute(builder: (context) => DetailPage());
+      Navigator.push(context, route);
+    }
+    catch(e){
       return null;
     }
   }
@@ -247,7 +265,9 @@ class _HomePageState extends State<HomePage> {
                                               height: 51,
                                               margin: const EdgeInsets.only(left: 10),
                                               child: ElevatedButton(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  getProductsID(snapshot.data['products'][index]['_id']);
+                                                },
                                                 child: Text('Detail', 
                                                 style: TextStyle(
                                                   color: Colors.black
