@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glowskin_project/users/landingpage2.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'dart:io';
@@ -41,25 +42,29 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  String url =  Platform.isAndroid ? 'http://192.168.137.33:3001' : 'http://localhost:3001';
+  String url =  Platform.isAndroid ? 'http://192.168.137.37:3001' : 'http://localhost:3001';
 
-  Future<void> login() async {
-    try {
-      var response = await Dio().post(
-        url + '/user/login',
-        data: {
-          "email": email,
-          "password": password,
-        },
-      );
-      print(response.data);
+  Future login() async {
+    try{
+      var dio = Dio();
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      var response = await dio.post(url + '/user/login', data: {
+        "email": email,
+        "password": password
+      });
+      // print(response.data['token']);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('token', response.data['token']);
+      prefs.setString('email', response.data['email']);
+      // print(prefs.getString('token'));
       AlertDialog alert = AlertDialog(
         title: Text("Login"),
         content: Text(response.data['message']),
         actions: [
           TextButton(
-          onPressed: () {
-            Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (_) {
+            onPressed: () {
+              Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (_) {
                 return new LandingPage2();
               }));
             },
@@ -73,12 +78,13 @@ class _LoginPageState extends State<LoginPage> {
           return alert;
         },
       );
-    } catch (e) {
-      print(e);
+    }catch(e){
       if (e is DioError) {
+        print(e.response!.data);
+        print(e.response!.statusCode);
         AlertDialog alert = AlertDialog(
           title: Text("Login"),
-          content: Text(e.response!.data['error']['message'].toString()),
+          content: Text(e.response!.data['message']),
           actions: [
             TextButton(
               onPressed: () {
@@ -88,15 +94,71 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ],
         );
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return alert;
-          },
-        );
       }
     }
   }
+
+  Future<void> getAllPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print('ini token');
+    print(prefs.getString('token'));
+    print('ini email');
+    print(prefs.getString('email'));
+  }
+  // Future<void> login() async {
+  //   try {
+  //     var response = await Dio().post(
+  //       url + '/user/login',
+  //       data: {
+  //         "email": email,
+  //         "password": password,
+  //       },
+  //     );
+  //     print(response.data);
+  //     AlertDialog alert = AlertDialog(
+  //       title: Text("Login"),
+  //       content: Text(response.data['message']),
+  //       actions: [
+  //         TextButton(
+  //         onPressed: () {
+  //           Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (_) {
+  //               return new LandingPage2();
+  //             }));
+  //           },
+  //           child: Text("OK"),
+  //         ),
+  //       ],
+  //     );
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return alert;
+  //       },
+  //     );
+  //   } catch (e) {
+  //     print(e);
+  //     if (e is DioError) {
+  //       AlertDialog alert = AlertDialog(
+  //         title: Text("Login"),
+  //         content: Text(e.response!.data['error']['message'].toString()),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //             child: Text("OK"),
+  //           ),
+  //         ],
+  //       );
+  //       showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return alert;
+  //         },
+  //       );
+  //     }
+  //   }
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -170,8 +232,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     onPressed: () {
                       login();
-                      print(nameController.text);
-                      print(passwordController.text);
+                      getAllPrefs();
+                      // print(nameController.text);
+                      // print(passwordController.text);
                     },
                   )),
             ],
