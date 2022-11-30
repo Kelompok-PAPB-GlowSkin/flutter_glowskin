@@ -3,6 +3,7 @@ import 'package:glowskin_project/unused/cardproduct.dart';
 import 'package:glowskin_project/model/product.dart';
 import 'package:glowskin_project/users/detailpage.dart';
 import 'package:glowskin_project/users/profilepage.dart';
+import 'package:glowskin_project/users/search.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -43,7 +44,12 @@ class _HomePageState extends State<HomePage> {
                             width: 49,
                             height: 62,
                             child: OutlinedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) {
+                                    return SearchPage();
+                                  }));
+                                },
                                 child: Image.asset(
                                   "assets/icon/search.png",
                                 ),
@@ -287,4 +293,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-} 
+}

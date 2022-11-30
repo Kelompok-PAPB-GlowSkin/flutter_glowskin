@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Product {
   String name;
+  String category;
   String imageUrl;
   String description;
   String ingredients;
@@ -10,6 +11,7 @@ class Product {
 
   Product(
       {required this.name,
+      required this.category,
       required this.imageUrl,
       required this.description,
       required this.ingredients,
@@ -20,6 +22,7 @@ class Product {
 List<Product> productList = [
   Product(
       name: 'Serum',
+      category: 'Serum',
       imageUrl:
           'https://th.bing.com/th/id/OIP.UbAI9WsLVslqY1WuML-5MwHaKG?pid=ImgDet&rs=1',
       description:
@@ -29,6 +32,7 @@ List<Product> productList = [
       rating: 4.8),
   Product(
       name: 'Toner',
+      category: 'Toner',
       imageUrl:
           'https://th.bing.com/th/id/OIP.UbAI9WsLVslqY1WuML-5MwHaKG?pid=ImgDet&rs=1',
       description:
@@ -38,6 +42,67 @@ List<Product> productList = [
       rating: 4.8),
   Product(
       name: 'Essence',
+      category: 'Essence',
+      imageUrl:
+          'https://th.bing.com/th/id/OIP.UbAI9WsLVslqY1WuML-5MwHaKG?pid=ImgDet&rs=1',
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud',
+      ingredients: 'Vitamin A',
+      review: 'review',
+      rating: 4.8),
+  Product(
+      name: 'Serum',
+      category: 'Serum',
+      imageUrl:
+          'https://th.bing.com/th/id/OIP.UbAI9WsLVslqY1WuML-5MwHaKG?pid=ImgDet&rs=1',
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud',
+      ingredients: 'Vitamin A',
+      review: 'review',
+      rating: 4.8),
+  Product(
+      name: 'Toner',
+      category: 'Toner',
+      imageUrl:
+          'https://th.bing.com/th/id/OIP.UbAI9WsLVslqY1WuML-5MwHaKG?pid=ImgDet&rs=1',
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud',
+      ingredients: 'Vitamin A',
+      review: 'review',
+      rating: 4.8),
+  Product(
+      name: 'Essence',
+      category: 'Essence',
+      imageUrl:
+          'https://th.bing.com/th/id/OIP.UbAI9WsLVslqY1WuML-5MwHaKG?pid=ImgDet&rs=1',
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud',
+      ingredients: 'Vitamin A',
+      review: 'review',
+      rating: 4.8),
+  Product(
+      name: 'Serum',
+      category: 'Serum',
+      imageUrl:
+          'https://th.bing.com/th/id/OIP.UbAI9WsLVslqY1WuML-5MwHaKG?pid=ImgDet&rs=1',
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud',
+      ingredients: 'Vitamin A',
+      review: 'review',
+      rating: 4.8),
+  Product(
+      name: 'Toner',
+      category: 'Toner',
+      imageUrl:
+          'https://th.bing.com/th/id/OIP.UbAI9WsLVslqY1WuML-5MwHaKG?pid=ImgDet&rs=1',
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud',
+      ingredients: 'Vitamin A',
+      review: 'review',
+      rating: 4.8),
+  Product(
+      name: 'Essence',
+      category: 'Essence',
       imageUrl:
           'https://th.bing.com/th/id/OIP.UbAI9WsLVslqY1WuML-5MwHaKG?pid=ImgDet&rs=1',
       description:

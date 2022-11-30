@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:glowskin_project/model/product.dart';
+import 'package:glowskin_project/users/landingpage2.dart';
 
 class DetailPage extends StatelessWidget {
   final Product product;
@@ -12,10 +13,6 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //     title: Text(
-      //   'Detail',
-      // )),
       body: Padding(
         padding: const EdgeInsets.only(top: 30),
         child: SingleChildScrollView(
@@ -26,7 +23,6 @@ class DetailPage extends StatelessWidget {
               Expanded(
                 flex: 8,
                 child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
                       height: 30,
@@ -42,13 +38,16 @@ class DetailPage extends StatelessWidget {
                             width: 50,
                             height: 50,
                             child: OutlinedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
                               child: Icon(
                                 Icons.arrow_back,
                                 color: Colors.black,
                                 size: 24,
                               ),
                               style: OutlinedButton.styleFrom(
+                                  padding: EdgeInsets.all(1),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30)),
                                   side: BorderSide(
@@ -71,6 +70,7 @@ class DetailPage extends StatelessWidget {
                                 size: 23,
                               ),
                               style: OutlinedButton.styleFrom(
+                                  padding: EdgeInsets.all(1),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30)),
                                   side: BorderSide(

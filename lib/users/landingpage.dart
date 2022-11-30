@@ -8,8 +8,6 @@ class LandingPage extends StatefulWidget {
   State<LandingPage> createState() => _LandingPageState();
 }
 
-
-
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
@@ -61,9 +59,9 @@ class _LandingPageState extends State<LandingPage> {
           ),
           SizedBox(height: 48),
           Container(
-            alignment: Alignment.center,
             width: 125,
             height: 40,
+            padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
             child: ElevatedButton(
               onPressed: () {
                 Navigator.of(context)
@@ -85,9 +83,9 @@ class _LandingPageState extends State<LandingPage> {
           ),
           SizedBox(height: 5),
           Container(
-            alignment: Alignment.center,
             width: 100,
             height: 40,
+            padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
             child: ElevatedButton(
               onPressed: () {
                 Navigator.of(context)
