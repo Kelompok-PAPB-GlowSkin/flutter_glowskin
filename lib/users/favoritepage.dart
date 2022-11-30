@@ -1,4 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:glowskin_project/model/product.dart';
+import 'package:glowskin_project/users/detailpage.dart';
+
+enum Actions { delete }
 
 class FavoritePage extends StatefulWidget {
   @override
@@ -10,283 +17,92 @@ class _FavoritePageState extends State<FavoritePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: ListView(
-          children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(top: 40),
-              child: const Text(
-                'My Favorite',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16),
+        padding: const EdgeInsets.only(top: 40, left: 25, right: 25),
+        child: Column(
+          children: [
+            SizedBox(height: 30),
+            Text(
+              "Favorite",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 20),
             Container(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    Container(
-                      width: 319,
-                      height: 101,
-                      margin: const EdgeInsets.all(10),
-                      // margin: const EdgeInsets.only(right: 20),
-                      decoration: BoxDecoration(
-                      color: Color(0xFFD9D9D9),
-                      borderRadius: BorderRadius.circular(20)),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 300,
-                            padding: const EdgeInsets.fromLTRB(80, 10, 0, 0),
-                            margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                            decoration: const BoxDecoration(
-                                image: DecorationImage(
-                              image: AssetImage(
-                                'assets/product.png',
+              child: Expanded(
+                child: SlidableAutoCloseBehavior(
+                  closeWhenOpened: true,
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: productList.length,
+                      itemBuilder: ((context, index) {
+                        final Product product = productList[index];
+                        return Slidable(
+                          key: Key(product.name),
+                          endActionPane: ActionPane(
+                            motion: const StretchMotion(),
+                            dismissible: DismissiblePane(
+                                onDismissed: () =>
+                                    _onDismissed(index, Actions.delete)),
+                            children: [
+                              SlidableAction(
+                                backgroundColor: Colors.red,
+                                icon: Icons.delete,
+                                label: 'Delete',
+                                onPressed: (context) =>
+                                    _onDismissed(index, Actions.delete),
                               ),
-                              fit: BoxFit.fitHeight,
-                            )),
+                            ],
                           ),
-                      
-                          Container(
-                            child: Column(
-                              children: [
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    padding: const EdgeInsets.fromLTRB(5, 15, 5, 5),
-                                    child: const Text(
-                                      'Nama Serum',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15),
-                                        )
-                                  ),
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    padding: const EdgeInsets.all(5),
-                                    child: const Text(
-                                      'Lorem Ipsum',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 15),
-                                        )
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                  
+                          child: buildProductListTile(product),
+                        );
+                      })),
                 ),
               ),
             ),
-            
-            SizedBox(height: 10),
-            Container(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    Container(
-                      width: 319,
-                      height: 101,
-                      margin: const EdgeInsets.all(10),
-                      // margin: const EdgeInsets.only(right: 20),
-                      decoration: BoxDecoration(
-                      color: Color(0xFFD9D9D9),
-                      borderRadius: BorderRadius.circular(20)),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 300,
-                            padding: const EdgeInsets.fromLTRB(80, 10, 0, 0),
-                            margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                            decoration: const BoxDecoration(
-                                image: DecorationImage(
-                              image: AssetImage(
-                                'assets/product.png',
-                              ),
-                              fit: BoxFit.fitHeight,
-                            )),
-                          ),
-                      
-                          Container(
-                            child: Column(
-                              children: [
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    padding: const EdgeInsets.fromLTRB(5, 15, 5, 5),
-                                    child: const Text(
-                                      'Nama Serum',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15),
-                                        )
-                                  ),
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    padding: const EdgeInsets.all(5),
-                                    child: const Text(
-                                      'Lorem Ipsum',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 15),
-                                        )
-                                  ),
-                                  
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                  
-                ),
-              ),
-            ),
-
-            SizedBox(height: 10),
-            Container(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    Container(
-                      width: 319,
-                      height: 101,
-                      margin: const EdgeInsets.all(10),
-                      // margin: const EdgeInsets.only(right: 20),
-                      decoration: BoxDecoration(
-                      color: Color(0xFFD9D9D9),
-                      borderRadius: BorderRadius.circular(20)),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 300,
-                            padding: const EdgeInsets.fromLTRB(80, 10, 0, 0),
-                            margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                            decoration: const BoxDecoration(
-                                image: DecorationImage(
-                              image: AssetImage(
-                                'assets/product.png',
-                              ),
-                              fit: BoxFit.fitHeight,
-                            )),
-                          ),
-                      
-                          Container(
-                            child: Column(
-                              children: [
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    padding: const EdgeInsets.fromLTRB(5, 15, 5, 5),
-                                    child: const Text(
-                                      'Nama Serum',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15),
-                                        )
-                                  ),
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    padding: const EdgeInsets.all(5),
-                                    child: const Text(
-                                      'Lorem Ipsum',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 15),
-                                        )),
-                              ],),)
-                        ],),)
-                  ],
-                ),
-              ),
-            ),
-
-            SizedBox(height: 10),
-            Container(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    Container(
-                      width: 319,
-                      height: 101,
-                      margin: const EdgeInsets.all(10),
-                      // margin: const EdgeInsets.only(right: 20),
-                      decoration: BoxDecoration(
-                      color: Color(0xFFD9D9D9),
-                      borderRadius: BorderRadius.circular(20)),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 300,
-                            padding: const EdgeInsets.fromLTRB(80, 10, 0, 0),
-                            margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                            decoration: const BoxDecoration(
-                                image: DecorationImage(
-                              image: AssetImage(
-                                'assets/product.png',
-                              ),
-                              fit: BoxFit.fitHeight,
-                            )),
-                          ),
-                      
-                          Container(
-                            child: Column(
-                              children: [
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    padding: const EdgeInsets.fromLTRB(5, 15, 5, 5),
-                                    child: const Text(
-                                      'Nama Serum',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15),
-                                        )
-                                  ),
-                                  Container(
-                                    alignment: Alignment.topLeft,
-                                    padding: const EdgeInsets.all(5),
-                                    child: const Text(
-                                      'Lorem Ipsum',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 15),
-                                        )
-                                  ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                  
-                ),
-              ),
-            ),
-            
-
           ],
         ),
-        ),
+      ),
     );
   }
+
+  void _onDismissed(int index, Actions action) {
+    final Product product = productList[index];
+    setState(() => productList.removeAt(index));
+
+    switch (action) {
+      case Actions.delete:
+        _showSnackBar(context, '${product.name} is deleted', Colors.red);
+        break;
+    }
+  }
+
+  void _showSnackBar(BuildContext context, String message, Color color) {
+    final snackBar = SnackBar(content: Text(message), backgroundColor: color);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  Widget buildProductListTile(Product product) => Builder(builder: (context) {
+        return ListTile(
+          contentPadding: const EdgeInsets.all(16),
+          title: Text(
+            product.name,
+            style: TextStyle(fontSize: 20),
+          ),
+          leading: Image.network(product.imageUrl),
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return DetailPage(product);
+            }));
+            final slidable = Slidable.of(context)!;
+            final isClosed =
+                slidable.actionPaneType.value == ActionPaneType.none;
+            if (isClosed) {
+              slidable.openStartActionPane();
+            }
+          },
+        );
+      });
 }

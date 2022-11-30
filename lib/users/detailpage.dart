@@ -13,10 +13,6 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //     title: Text(
-      //   'Detail',
-      // )),
       body: Padding(
         padding: const EdgeInsets.only(top: 30),
         child: SingleChildScrollView(
@@ -27,7 +23,6 @@ class DetailPage extends StatelessWidget {
               Expanded(
                 flex: 8,
                 child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
                       height: 30,
