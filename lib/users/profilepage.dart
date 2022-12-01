@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:glowskin_project/utils/user_preferences.dart';
 import 'package:glowskin_project/widgets/profile_widget.dart';
 import 'package:glowskin_project/users/editprofilepage.dart';
