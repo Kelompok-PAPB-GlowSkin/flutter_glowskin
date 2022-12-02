@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:glowskin_project/model/product.dart';
+import 'package:glowskin_project/users/landingpage2.dart';
 
 class DetailPage extends StatelessWidget {
 

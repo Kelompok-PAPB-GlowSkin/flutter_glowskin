@@ -81,7 +81,12 @@ class _HomePageState extends State<HomePage> {
                             width: 49,
                             height: 62,
                             child: OutlinedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  // Navigator.of(context).push(
+                                  //     MaterialPageRoute(builder: (context) {
+                                  //   return SearchPage();
+                                  // }));
+                                },
                                 child: Image.asset(
                                   "assets/icon/search.png",
                                 ),
@@ -329,4 +334,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-} 
+}
