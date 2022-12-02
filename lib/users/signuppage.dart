@@ -24,7 +24,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String password = '';
   
 
-  String url =  Platform.isAndroid ? 'http://192.168.137.33:3001' : 'http://localhost:3001';
+  String url =  Platform.isAndroid ? 'http://192.168.1.24:3001' : 'http://localhost:3001';
 
   _SignUpPageState() {
     usernameController.addListener(() {

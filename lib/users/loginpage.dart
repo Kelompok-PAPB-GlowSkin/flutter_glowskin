@@ -13,11 +13,12 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class SizeConfig{
-  double heightSize(BuildContext context, double size){
+class SizeConfig {
+  double heightSize(BuildContext context, double size) {
     return MediaQuery.of(context).size.height * size;
   }
-  double widthSize(BuildContext context, double size){
+
+  double widthSize(BuildContext context, double size) {
     return MediaQuery.of(context).size.width * size;
   }
 }
@@ -42,17 +43,16 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  String url =  Platform.isAndroid ? 'http://10.223.244.172:3001' : 'http://localhost:3001';
+  String url =
+      Platform.isAndroid ? 'http://192.168.1.24:3001' : 'http://localhost:3001';
 
   Future login() async {
-    try{
+    try {
       var dio = Dio();
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers["accept"] = "application/json";
-      var response = await dio.post(url + '/user/login', data: {
-        "email": email,
-        "password": password
-      });
+      var response = await dio.post(url + '/user/login',
+          data: {"email": email, "password": password});
       // print(response.data['token']);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', response.data['token']);
@@ -64,7 +64,8 @@ class _LoginPageState extends State<LoginPage> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (_) {
+              Navigator.of(context)
+                  .pushReplacement(new MaterialPageRoute(builder: (_) {
                 return new LandingPage2();
               }));
             },
@@ -78,13 +79,13 @@ class _LoginPageState extends State<LoginPage> {
           return alert;
         },
       );
-    }catch(e){
+    } catch (e) {
       if (e is DioError) {
         print(e.response!.data);
         print(e.response!.statusCode);
         AlertDialog alert = AlertDialog(
           title: Text("Login"),
-          content: Text(e.response!.data['message']),
+          content: Text(e.response!.data['error']['message']),
           actions: [
             TextButton(
               onPressed: () {
@@ -93,6 +94,12 @@ class _LoginPageState extends State<LoginPage> {
               child: Text("OK"),
             ),
           ],
+        );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
         );
       }
     }
@@ -105,6 +112,7 @@ class _LoginPageState extends State<LoginPage> {
     print('ini email');
     print(prefs.getString('email'));
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
