@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  String url =  Platform.isAndroid ? 'http://192.168.137.37:3001' : 'http://localhost:3001';
+  String url =  Platform.isAndroid ? 'http://192.168.1.13:3001' : 'http://localhost:3001';
 
   Future login() async {
     try{
@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
         print(e.response!.statusCode);
         AlertDialog alert = AlertDialog(
           title: Text("Login"),
-          content: Text(e.response!.data['message']),
+          content: Text(e.response!.data['error']['message']),
           actions: [
             TextButton(
               onPressed: () {

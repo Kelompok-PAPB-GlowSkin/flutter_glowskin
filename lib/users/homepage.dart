@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String url = Platform.isAndroid ? "http://192.168.137.37:3001" : 'http://localhost:3001';
+  String url = Platform.isAndroid ? "http://192.168.1.13:3001" : 'http://localhost:3001';
 
   Future getProducts() async {
     var response = await Dio().get(url+'/product/get-all-product');

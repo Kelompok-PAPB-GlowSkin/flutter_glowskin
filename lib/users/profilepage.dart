@@ -16,24 +16,34 @@ class ProfilPage extends StatefulWidget {
 class _ProfilPageState extends State<ProfilPage> {
   @override
 
-  String url = Platform.isAndroid ? "http://192.168.137.37:3001" : 'http://localhost:3001';
+  String url = Platform.isAndroid ? "http://192.168.1.13:3001" : 'http://localhost:3001';
 
   Future getUser() async {
     try{
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      SharedPreferences akun = await SharedPreferences.getInstance();
       String token = prefs.getString('token')!;
       String email = prefs.getString('email')!;
       var dio = Dio();
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers["accept"] = "application/json";
       var response = await dio.get(url + '/user/get-user-by-email/$email');
+      akun.setString('id', response.data['_id']);
       print(response.data);
+      setState(() {
+        response.data;
+      });
       return response.data;
     }catch(e){
       print(e);
+      if(e is DioError){
+        print(e.response!.data);
+        print(e.response!.statusCode);
+      }
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     final user = UserPreferences.myUser;
     getUser();
