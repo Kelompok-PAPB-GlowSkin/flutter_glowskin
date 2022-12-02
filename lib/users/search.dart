@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glowskin_project/constans.dart';
 import 'package:glowskin_project/model/product.dart';
 import 'package:glowskin_project/users/detailpage.dart';
 
@@ -107,3 +108,50 @@ class _SearchPageState extends State<SearchPage> {
   }
 }
 
+// class MySearchDelegate extends SearchDelegate {
+//   @override
+//   Widget? BuildLeading(BuildContext context) => IconButton(
+//         onPressed: () => close(context, null),
+//         icon: const Icon(Icons.arrow_back),
+//       );
+
+//   @override
+//   List<Widget>? buildActions(BuildContext context) => [
+//         IconButton(
+//           onPressed: () {
+//             if (query.isEmpty) {
+//               close(context, null);
+//             } else {
+//               query = '';
+//             }
+//           },
+//           icon: const Icon(Icons.clear),
+//         ),
+//       ];
+
+//   @override
+//   Widget buildResults(BuildContext context) => Container();
+
+//   @override
+//   Widget buildSuggestions(BuildContext context) {
+//     List<String> suggestions = [
+//       'Serum',
+//       'Toner',
+//       'Essence',
+//     ];
+
+//     return ListView.builder(
+//       itemCount: suggestions.length,
+//       itemBuilder: (context, index) {
+//         final suggestion = suggestions[index];
+
+//         return ListTile(
+//           title: Text(suggestion),
+//           onTap: () {
+//             query = suggestion;
+//           },
+//         );
+//       },
+//     );
+//   }
+// }
