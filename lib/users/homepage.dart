@@ -16,10 +16,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String url = Platform.isAndroid ? "http://192.168.1.24:3001" : 'http://localhost:3001';
+  String url =
+      Platform.isAndroid ? "http://192.168.1.24:3001" : 'http://localhost:3001';
 
   Future getProducts() async {
-    var response = await Dio().get(url+'/product/get-all-product');
+    var response = await Dio().get(url + '/product/get-all-product');
     try {
       if (response.statusCode == 200) {
         return response.data;
@@ -32,18 +33,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future getProductsID(id_barang) async {
-    try{
+    try {
       var dio = Dio();
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers["accept"] = "application/json";
       SharedPreferences id = await SharedPreferences.getInstance();
       id.setString('id', id_barang);
-      var response = await dio.get(url+'/product/get-product-by-id/$id_barang');
+      var response =
+          await dio.get(url + '/product/get-product-by-id/$id_barang');
       // print(response.data);
-      MaterialPageRoute route = MaterialPageRoute(builder: (context) => DetailPage());
+      MaterialPageRoute route =
+          MaterialPageRoute(builder: (context) => DetailPage());
       Navigator.push(context, route);
-    }
-    catch(e){
+    } catch (e) {
       return null;
     }
   }
@@ -220,45 +222,53 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(height: 20),
                       Container(
-                          height: 360,
-                          child: FutureBuilder(
+                        height: 360,
+                        child: FutureBuilder(
                           future: getProducts(),
                           builder: (context, snapshot) {
-                            if(snapshot.hasData){
+                            if (snapshot.hasData) {
                               return ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: snapshot.data['products'].length,
-                                itemBuilder: (context,index){
+                                itemBuilder: (context, index) {
                                   return Container(
                                     width: 208,
                                     height: 349,
                                     margin: const EdgeInsets.only(right: 20),
                                     decoration: BoxDecoration(
-                                      color: Color(0xFFD9D9D9),
-                                      borderRadius: BorderRadius.circular(20)
-                                    ),
+                                        color: Color(0xFFD9D9D9),
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
                                     child: Column(
                                       children: [
                                         Container(
                                           height: 240,
-                                          margin: const EdgeInsets.only(top: 33, left: 10, right: 15, bottom: 18),
+                                          margin: const EdgeInsets.only(
+                                              top: 33,
+                                              left: 10,
+                                              right: 15,
+                                              bottom: 18),
                                           child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               RotatedBox(
                                                 quarterTurns: -45,
                                                 child: Text(
-                                                  snapshot.data['products'][index]['nama_barang'],
+                                                  snapshot.data['products']
+                                                      [index]['nama_barang'],
                                                   style: TextStyle(
                                                     fontSize: 20,
                                                   ),
-                                                ), 
+                                                ),
                                               ),
                                               Expanded(
                                                 child: Image.network(
-                                                  snapshot.data['products'][index]['foto_barang'],
+                                                  snapshot.data['products']
+                                                      [index]['foto_barang'],
                                                   fit: BoxFit.cover,
-                                                  alignment: (Alignment(-4.0, -1.0)),
+                                                  alignment:
+                                                      (Alignment(-4.0, -1.0)),
                                                 ),
                                               )
                                             ],
@@ -269,42 +279,46 @@ class _HomePageState extends State<HomePage> {
                                             Container(
                                               width: 129,
                                               height: 51,
-                                              margin: const EdgeInsets.only(left: 10),
+                                              margin: const EdgeInsets.only(
+                                                  left: 10),
                                               child: ElevatedButton(
                                                 onPressed: () {
-                                                  getProductsID(snapshot.data['products'][index]['_id']);
+                                                  getProductsID(
+                                                      snapshot.data['products']
+                                                          [index]['_id']);
                                                 },
-                                                child: Text('Detail', 
-                                                style: TextStyle(
-                                                  color: Colors.black
-                                                  ),
+                                                child: Text(
+                                                  'Detail',
+                                                  style: TextStyle(
+                                                      color: Colors.black),
                                                 ),
                                                 style: ElevatedButton.styleFrom(
                                                   primary: Colors.white,
                                                   shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(25)
-                                                  ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25)),
                                                 ),
                                               ),
                                             ),
                                             Container(
-                                              margin: const EdgeInsets.only(left: 6, right: 10),
+                                              margin: const EdgeInsets.only(
+                                                  left: 6, right: 10),
                                               height: 53,
                                               child: SizedBox.fromSize(
-                                                size: Size(53, 53),
-                                                child: ClipOval(
-                                                  child: Material(
-                                                    color: Colors.black,
-                                                    child: InkWell(
-                                                      onTap: (() {}),
-                                                      child: Icon(
-                                                        Icons.favorite,
-                                                        color: Colors.white,
+                                                  size: Size(53, 53),
+                                                  child: ClipOval(
+                                                    child: Material(
+                                                      color: Colors.black,
+                                                      child: InkWell(
+                                                        onTap: (() {}),
+                                                        child: Icon(
+                                                          Icons.favorite,
+                                                          color: Colors.white,
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                )
-                                              ),
+                                                  )),
                                             )
                                           ],
                                         )
@@ -313,7 +327,7 @@ class _HomePageState extends State<HomePage> {
                                   );
                                 },
                               );
-                            }else{
+                            } else {
                               return Center(
                                 child: CircularProgressIndicator(),
                               );
@@ -335,4 +349,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-} 
+}

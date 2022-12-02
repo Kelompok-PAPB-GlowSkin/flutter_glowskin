@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:glowskin_project/constans.dart';
-// import 'package:glowskin_project/users/fav.dart';
 import 'package:glowskin_project/users/favoritepage.dart';
 import 'package:glowskin_project/users/homepage.dart';
 import 'package:glowskin_project/users/profilepage.dart';
@@ -14,7 +13,7 @@ class _LandingPage2State extends State<LandingPage2> {
   int _bottomNavCurrentIndex = 0;
   List<Widget> _container = [
     new HomePage(),
-    // new FavoritePage(),
+    new FavoritePage(),
     new ProfilPage()
   ];
 

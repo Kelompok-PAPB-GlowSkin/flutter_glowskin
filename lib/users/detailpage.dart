@@ -166,6 +166,7 @@ class DetailPage extends StatelessWidget {
                                   child: Text(
                                     snapshot.data['products']
                                         ['deskripsi_barang'],
+                                    textAlign: TextAlign.justify,
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
