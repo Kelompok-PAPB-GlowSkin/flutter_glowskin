@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'dart:io';
 
+import 'package:glowskin_project/users/search.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -81,7 +82,12 @@ class _HomePageState extends State<HomePage> {
                             width: 49,
                             height: 62,
                             child: OutlinedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (context) {
+                                    return SearchPage();
+                                  }));
+                                },
                                 child: Image.asset(
                                   "assets/icon/search.png",
                                 ),
@@ -214,8 +220,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(height: 20),
                       Container(
-                        height: 360,
-                        child: FutureBuilder(
+                          height: 360,
+                          child: FutureBuilder(
                           future: getProducts(),
                           builder: (context, snapshot) {
                             if(snapshot.hasData){
