@@ -33,7 +33,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     });
   }
 
-  String url = Platform.isAndroid ? "http://192.168.1.13:3001" : 'http://localhost:3001';
+  String url = Platform.isAndroid ? "http://192.168.1.68:3001" : 'http://localhost:3001';
 
   void printUser(){
     print(nama.text);

@@ -16,7 +16,7 @@ class ProfilPage extends StatefulWidget {
 class _ProfilPageState extends State<ProfilPage> {
   @override
 
-  String url = Platform.isAndroid ? "http://192.168.1.13:3001" : 'http://localhost:3001';
+  String url = Platform.isAndroid ? "http://192.168.1.68:3001" : 'http://localhost:3001';
 
   Future getUser() async {
     try{

@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  String url =  Platform.isAndroid ? 'http://192.168.1.13:3001' : 'http://localhost:3001';
+  String url =  Platform.isAndroid ? 'http://192.168.1.68:3001' : 'http://localhost:3001';
 
   Future login() async {
     try{
@@ -93,6 +93,12 @@ class _LoginPageState extends State<LoginPage> {
               child: Text("OK"),
             ),
           ],
+        );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
         );
       }
     }

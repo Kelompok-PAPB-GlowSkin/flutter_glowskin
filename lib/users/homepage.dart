@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String url = Platform.isAndroid ? "http://192.168.1.13:3001" : 'http://localhost:3001';
+  String url = Platform.isAndroid ? "http://192.168.1.68:3001" : 'http://localhost:3001';
 
   Future getProducts() async {
     var response = await Dio().get(url+'/product/get-all-product');
@@ -231,8 +231,9 @@ class _HomePageState extends State<HomePage> {
                                                 ), 
                                               ),
                                               Expanded(
-                                                child: Image.network(
-                                                  snapshot.data['products'][index]['foto_barang'],
+                                                child: Image(
+                                                  image: NetworkImage(snapshot.data['products'][index]['foto_barang']),
+                                                  // snapshot.data['products'][index][''],
                                                   fit: BoxFit.cover,
                                                   alignment: (Alignment(-4.0, -1.0)),
                                                 ),
