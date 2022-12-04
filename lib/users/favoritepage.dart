@@ -1,9 +1,10 @@
 import 'dart:ui';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:glowskin_project/model/product.dart';
 import 'package:glowskin_project/users/detailpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum Actions { delete }
 
@@ -13,8 +14,60 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
+
+  String url = 'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
+
+  Future getFavoriteByUser() async {
+    try {
+      var dio = Dio();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String userID = prefs.getString('userID')!;
+      var token = prefs.getString('token')!;
+      // print(token);
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var response = await dio.get(
+        url + '/favorite/get-favorite-by-user/$userID',
+      );
+      // print(response.data['favorites']);
+      return response.data;
+    } catch (e) {
+      print(e);
+      if (e is DioError) {
+        print(e.response!.data);
+        print(e.response!.statusCode);
+      }
+    }
+  }
+
+  Future getProductsByID() async {
+    try {
+      var dio = Dio();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String data = getFavoriteByUser() as String;
+      var token = prefs.getString('token')!;
+      // print(token);
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      dio.options.headers["Authorization"] = 'Bearer $token';
+      var response = await dio.get(
+        url + '/product/get-product-by-id/$data',
+      );
+      print(response.data['favorites']);
+      return response.data;
+    } catch (e) {
+      print(e);
+      if (e is DioError) {
+        print(e.response!.data);
+        print(e.response!.statusCode);
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
+    // getFavoriteByUser();
+    getProductsByID();
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(top: 40, left: 25, right: 25),

@@ -16,8 +16,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String url =
-      Platform.isAndroid ? "http://192.168.1.24:3001" : 'http://localhost:3001';
+  // String url = Platform.isAndroid ? "http://192.168.1.24:3001" : 'http://localhost:3001';
+  String url = 'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
 
   Future getProducts() async {
     var response = await Dio().get(url + '/product/get-all-product');
@@ -32,13 +32,23 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future getUserID() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var dio = Dio();
+    var email = prefs.getString('email');
+    var response = await dio.get(url + '/user/get-user-by-email/$email');
+    prefs.setString('userID', response.data['_id']);
+    print(response.data);
+    return response.data;
+  }
+
   Future getProductsID(id_barang) async {
     try {
       var dio = Dio();
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers["accept"] = "application/json";
       SharedPreferences id = await SharedPreferences.getInstance();
-      id.setString('id', id_barang);
+      id.setString('id_barang', id_barang);
       var response =
           await dio.get(url + '/product/get-product-by-id/$id_barang');
       // print(response.data);
@@ -50,9 +60,33 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future addFavorite() async {
+    try {
+      var dio = Dio();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token')!;
+      print(token);
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      dio.options.headers["Authorization"] = "Bearer $token";
+      SharedPreferences id = await SharedPreferences.getInstance();
+      var response = await dio.post(url + '/favorite/add-favorite',
+          data: {"id_akun": id.getString('userID'), "id_barang": id.getString('id_barang')});
+      print('berhasil menambahkan data');
+      print(response.data);
+      return response.data;
+    } catch (e) {
+      print(e);
+      if(e is DioError) {
+        print(e.response!.data);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     getProducts();
+    getUserID();
     return Scaffold(
       body: ListView(
         children: [
@@ -311,7 +345,10 @@ class _HomePageState extends State<HomePage> {
                                                     child: Material(
                                                       color: Colors.black,
                                                       child: InkWell(
-                                                        onTap: (() {}),
+                                                        onTap: (() {
+                                                          // getProductsID(snapshot.data['products'][index]['_id']);
+                                                          addFavorite();
+                                                        }),
                                                         child: Icon(
                                                           Icons.favorite,
                                                           color: Colors.white,
