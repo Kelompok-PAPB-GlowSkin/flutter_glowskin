@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   String url =
-      Platform.isAndroid ? 'http://192.168.1.24:3001' : 'http://localhost:3001';
+      Platform.isAndroid ? 'http://192.168.1.26:3001' : 'http://localhost:3001';
 
   Future login() async {
     try {
