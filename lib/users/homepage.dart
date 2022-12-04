@@ -64,6 +64,7 @@ class _HomePageState extends State<HomePage> {
     var email = prefs.getString('email');
     var response = await dio.get(url + '/user/get-user-by-email/$email');
     prefs.setString('userID', response.data['_id']);
+    print(prefs.getString('userID'));
     print(response.data);
     return response.data;
   }
@@ -86,7 +87,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future addFavorite() async {
+  Future addFavorite(id_barang) async {
     try {
       var dio = Dio();
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -97,14 +98,45 @@ class _HomePageState extends State<HomePage> {
       dio.options.headers["Authorization"] = "Bearer $token";
       SharedPreferences id = await SharedPreferences.getInstance();
       var response = await dio.post(url + '/favorite/add-favorite',
-          data: {"id_akun": id.getString('userID'), "id_barang": id.getString('id_barang')});
-      print('berhasil menambahkan data');
+          data: {"id_akun": id.getString('userID'), "id_barang": id_barang});
       print(response.data);
+      AlertDialog alert = AlertDialog(
+        title: Text('Success'),
+        content: Text('Product berhasil ditambahkan ke favorit'),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'))
+        ],
+      );
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
       return response.data;
     } catch (e) {
       print(e);
       if(e is DioError) {
         print(e.response!.data);
+        AlertDialog alert = AlertDialog(
+          title: Text('Error'),
+          content: Text(e.response!.data['error']['message']),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'))
+          ],
+        );
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            });
       }
     }
   }
@@ -346,8 +378,8 @@ class _HomePageState extends State<HomePage> {
                                                       child: InkWell(
                                                         onTap: (() {
                                                           // getProductsID(snapshot.data['products'][index]['_id']);
-                                                          addFavorite();
-                                                        }),
+                                                          addFavorite(
+                                                              snapshot.data['products'][index]['_id']);}),
                                                         child: Icon(
                                                           Icons.favorite,
                                                           color: Colors.white,

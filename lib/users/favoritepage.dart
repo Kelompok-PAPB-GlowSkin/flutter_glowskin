@@ -30,7 +30,7 @@ class _FavoritePageState extends State<FavoritePage> {
       var response = await dio.get(
         url + '/favorite/get-favorite-by-user/$userID',
       );
-      // print(response.data['favorites']);
+      // print(response.data);
       return response.data;
     } catch (e) {
       print(e);
@@ -45,16 +45,46 @@ class _FavoritePageState extends State<FavoritePage> {
     try {
       var dio = Dio();
       final prefs = await SharedPreferences.getInstance();
-      var data = getFavoriteByUser().toString();
       var token = prefs.getString('token')!;
-      print(data);
+      var data = await getFavoriteByUser();
+      var list_barang = {};
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers["accept"] = "application/json";
-      dio.options.headers["Authorization"] = 'Bearer $token';
-      var response = await dio.get(
-        url + '/product/get-product-by-id/$data',
+      dio.options.headers["Authorization"] = "Bearer $token";
+      // print(data['favorites'].length);
+      for (int i = 0; i < data['favorites'].length; i++) {
+        // print(data['favorites'][i]);
+        var list_id = data['favorites'][i]['id_barang'];
+        // print(list_id);
+        var response = await dio.get(
+          url + '/product/get-product-by-id/$list_id',
+        );
+        // print(response.data);
+        list_barang[i] = response.data;
+      }
+      // print(list_barang);
+      return list_barang;
+    } catch (e) {
+      print(e);
+      if (e is DioError) {
+        print(e.response!.data);
+        print(e.response!.statusCode);
+      }
+    }
+  }
+
+  Future deleteFavorite(id) async {
+    try {
+      var dio = Dio();
+      final prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token')!;
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var response = await dio.delete(
+        url + '/favorite/delete-favorite/$id',
       );
-      print(response.data['products']);
+      print(response.data);
       return response.data;
     } catch (e) {
       print(e);
@@ -89,11 +119,14 @@ class _FavoritePageState extends State<FavoritePage> {
                 future: getProductsByID(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return Expanded(
+                    print(snapshot.data.length);
+                    for (int i = 0; i < snapshot.data.length; i++) {
+                      print(snapshot.data[i]);
+                      return Expanded(
                       child: Container(
                         child: SlidableAutoCloseBehavior(
                           closeWhenOpened: true,
-                          child: snapshot.data['favorites'] == null
+                          child: snapshot.data!.length == 0
                               ? Container(
                                   child: Center(
                                     child: Text(
@@ -102,13 +135,12 @@ class _FavoritePageState extends State<FavoritePage> {
                                 )
                               : ListView.builder(
                                   shrinkWrap: true,
-                                  itemCount: snapshot.data['favorites'].length,
+                                  itemCount: snapshot.data.length,
                                   itemBuilder: ((context, index) {
                                     // final product =
                                     //     snapshot.data['favorites'][index];
                                     return Slidable(
-                                      key: Key(snapshot.data['favorites'][index]
-                                          ['nama_barang']),
+                                      key: Key(snapshot.data[index]['products']['_id']),
                                       endActionPane: ActionPane(
                                         motion: const StretchMotion(),
                                         // dismissible: DismissiblePane(
@@ -128,13 +160,11 @@ class _FavoritePageState extends State<FavoritePage> {
                                         contentPadding:
                                             const EdgeInsets.all(16),
                                         title: Text(
-                                          snapshot.data['favorites'][index]
-                                              ['nama_barang'],
+                                          snapshot.data[index]['products']['nama_barang'],
                                           style: TextStyle(fontSize: 20),
                                         ),
-                                        // leading: Image.network(
-                                        //     snapshot.data['favorites'][index]
-                                        //         ['foto_barang']),
+                                        leading: Image.network(
+                                            snapshot.data[index]['products']['foto_barang']),
                                         onTap: () {
                                           // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                                           //   return DetailPage(produc);
@@ -154,6 +184,7 @@ class _FavoritePageState extends State<FavoritePage> {
                         ),
                       ),
                     );
+                    }
                   }
                   return Center(
                     child: CircularProgressIndicator(),
