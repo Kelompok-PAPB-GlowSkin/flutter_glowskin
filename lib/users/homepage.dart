@@ -20,8 +20,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String url =
-      Platform.isAndroid ? "http://192.168.1.26:3001" : 'http://localhost:3001';
+  // String url = Platform.isAndroid ? "http://192.168.1.26:3001" : 'http://localhost:3001';
+  String url = 'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
 
   int id_cat = 0;
 
