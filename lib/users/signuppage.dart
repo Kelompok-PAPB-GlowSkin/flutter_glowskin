@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:glowskin_project/users/landingpage2.dart';
+import 'package:glowskin_project/users/landingpage.dart';
 import 'package:glowskin_project/users/launcher2.dart';
+import 'package:dio/dio.dart';
+import 'dart:io';
+
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -10,20 +13,28 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  TextEditingController usernameController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
 
-  String nama = '';
+  String username = '';
+  String name = '';
   String email = '';
   String password = '';
-  String confirmPassword = '';
+  
+
+  String url =  Platform.isAndroid ? 'http://192.168.1.26:3001' : 'http://localhost:3001';
 
   _SignUpPageState() {
+    usernameController.addListener(() {
+      setState(() {
+        username = usernameController.text;
+      });
+    });
     nameController.addListener(() {
       setState(() {
-        nama = nameController.text;
+        name = nameController.text;
       });
     });
     emailController.addListener(() {
@@ -36,74 +47,64 @@ class _SignUpPageState extends State<SignUpPage> {
         password = passwordController.text;
       });
     });
-    confirmPasswordController.addListener(() {
-      setState(() {
-        confirmPassword = confirmPasswordController.text;
-      });
-    });
   }
 
-  void _usernameListen(){
-    if(nameController.text.isEmpty){
-      nama = '';
-    }else{
-      nama = nameController.text;
-    }
-  }
-
-  void _emailListen(){
-    if(emailController.text.isEmpty){
-      email = '';
-    }else{
-      email = emailController.text;
-    }
-  }
-
-  void _passwordListen(){
-    if(passwordController.text.isEmpty){
-      password = '';
-    }else{
-      password = passwordController.text;
-    }
-  }
-
-  void _confirmPasswordListen(){
-    if(confirmPasswordController.text.isEmpty){
-      confirmPassword = '';
-    }else{
-      confirmPassword = confirmPasswordController.text;
-    }
-  }
-
-  SignUp(BuildContext context) {
-    AlertDialog alertDialog = AlertDialog(
-      title: Text("Sign Up"),
-      actions: [
-        if(nama == '' || email == '' || password == '' || confirmPassword == '')
+  Future<void> signUp() async {
+    try {
+      var response = await Dio().post(
+        url + '/user/add-user',
+        data: {
+          "username": username,
+          "password": password,
+          "name": name,
+          "email": email,
+        },
+      );
+      print(response.data);
+      AlertDialog alert = AlertDialog(
+        title: Text("Sign Up"),
+        content: Text("Berhasil Mendaftar"),
+        actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (_){
+                return LandingPage();
+              }));
             },
             child: Text("OK"),
           ),
-        if(nama != '' && email != '' && password != '' && confirmPassword != '')
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text("OK"),
-          ),
-      ],
-      content: (nama == '' || email == '' || password == '' || confirmPassword == '')
-          ? Text("Harap mengisi form dengan benar")
-          : Text("Sign Up berhasil"),
-    );
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alertDialog;
-      },
-    );
+        ],
+      );
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    } catch (e) {
+      if (e is DioError) {
+        print(e.response!.data);
+        print(e.response!.statusCode);
+        AlertDialog alert = AlertDialog(
+          title: Text("Sign Up"),
+          content: Text(e.response!.data['error']['message']),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
+    }
   }
 
   @override
@@ -138,7 +139,19 @@ class _SignUpPageState extends State<SignUpPage> {
               Container(
                 padding: const EdgeInsets.all(10),
                 child: TextField(
-                  controller: emailController,
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                    ),
+                    labelText: 'Name',
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: usernameController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -150,7 +163,7 @@ class _SignUpPageState extends State<SignUpPage> {
               Container(
                 padding: const EdgeInsets.all(10),
                 child: TextField(
-                  controller: nameController,
+                  controller: emailController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -173,19 +186,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: TextField(
-                  obscureText: true,
-                  controller: confirmPasswordController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                    ),
-                    labelText: 'Confirm Password',
-                  ),
-                ),
-              ),
-              Container(
                   height: 60,
                   width: 125,
                   padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
@@ -203,11 +203,11 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                     onPressed: () {
-                      SignUp(context);
+                      signUp();
                       print(nameController.text);
                       print(emailController.text);
-                      print(passwordController.text);
-                      print(confirmPasswordController);                      
+                      print(usernameController.text);
+                      print(passwordController.text);                     
                     },
                   )),
             ],

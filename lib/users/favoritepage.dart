@@ -93,9 +93,9 @@ class _FavoritePageState extends State<FavoritePage> {
           ),
           leading: Image.network(product.imageUrl),
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return DetailPage(product);
-            }));
+            // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            //   return DetailPage(produc);
+            // }));
             final slidable = Slidable.of(context)!;
             final isClosed =
                 slidable.actionPaneType.value == ActionPaneType.none;

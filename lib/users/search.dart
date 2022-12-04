@@ -1,7 +1,10 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:glowskin_project/constans.dart';
 import 'package:glowskin_project/model/product.dart';
 import 'package:glowskin_project/users/detailpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -9,15 +12,53 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  List<Product> display_list = List.from(productList);
+  String url =
+      Platform.isAndroid ? "http://192.168.1.26:3001" : 'http://localhost:3001';
 
-  void updateList(String value) {
-    setState(() {
-      display_list = productList
-          .where((element) =>
-              element.name.toLowerCase().contains(value.toLowerCase()))
-          .toList();
+  TextEditingController nama = TextEditingController();
+
+  String item = "";
+
+  _SearchPageState() {
+    nama.addListener(() {
+      setState(() {
+        item = nama.text;
+      });
     });
+  }
+
+  Future searchProducts() async {
+    try {
+      var response = await Dio().get(url + '/product/search-product/$item');
+      print(response.data);
+      // setState(() {
+      //   response.data;
+      // });
+      return response.data;
+    } catch (e) {
+      print(e);
+      if (e is DioError) {
+        print(e.response!.data);
+      }
+    }
+  }
+
+  Future getProductsID(id_barang) async {
+    try {
+      var dio = Dio();
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      SharedPreferences id = await SharedPreferences.getInstance();
+      id.setString('id', id_barang);
+      var response =
+          await dio.get(url + '/product/get-product-by-id/$id_barang');
+      // print(response.data);
+      MaterialPageRoute route =
+          MaterialPageRoute(builder: (context) => DetailPage());
+      Navigator.push(context, route);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
@@ -42,7 +83,10 @@ class _SearchPageState extends State<SearchPage> {
                 height: 20.0,
               ),
               TextField(
-                onChanged: (value) => updateList(value),
+                onChanged: (value) => setState(() {
+                  searchProducts();
+                }),
+                controller: nama,
                 style: TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                   filled: true,
@@ -59,99 +103,68 @@ class _SearchPageState extends State<SearchPage> {
               SizedBox(
                 height: 20.0,
               ),
-              Container(
-                child: Expanded(
-                  child: display_list.length == 0
-                      ? Center(
-                          child: Text(
-                            "Produk Tidak Ditemukan",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        )
-                      : ListView.builder(
-                          itemCount: display_list.length,
-                          scrollDirection: Axis.vertical,
-                          itemBuilder: (context, index) => Container(
-                                child: ListTile(
-                                  contentPadding: const EdgeInsets.all(8.0),
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (context) {
-                                      return DetailPage(productList[index]);
-                                    }));
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  title: Text(
-                                    display_list[index].name,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
+              FutureBuilder(
+                  future: searchProducts(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Expanded(
+                        child: Container(
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data['products'].length,
+                              scrollDirection: Axis.vertical,
+                              itemBuilder: (context, index) => Container(
+                                    width: 100,
+                                    alignment: Alignment.centerLeft,
+                                    // margin: const EdgeInsets.only(left: 5),
+                                    child: ListTile(
+                                      contentPadding: const EdgeInsets.only(
+                                          top: 8,
+                                          left: 10,
+                                          right: 10,
+                                          bottom: 8),
+                                      onTap: () {
+                                        getProductsID(snapshot.data['products']
+                                            [index]['_id']);
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      title: Container(
+                                        width: 50,
+                                        padding: EdgeInsets.only(right: 10),
+                                        child: Text(
+                                          snapshot.data['products'][index]
+                                              ['nama_barang'],
+                                          overflow: TextOverflow.clip,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      // trailing: Text(
+                                      //   "${display_list[index].rating}",
+                                      //   style: TextStyle(color: Color(0xff51AD99)),
+                                      // ),
+                                      trailing: Container(
+                                        width: 40,
+                                        height: 40,
+                                        child: Image.network(
+                                          snapshot.data['products'][index]
+                                              ['foto_barang'],
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  trailing: Text(
-                                    "${display_list[index].rating}",
-                                    style: TextStyle(color: Color(0xff51AD99)),
-                                  ),
-                                  leading: Image.network(
-                                      display_list[index].imageUrl!),
-                                ),
-                              )),
-                ),
-              ),
+                                  )),
+                        ),
+                      );
+                    }
+                    return Text('Temukan Produk');
+                  }),
             ]),
       ),
     );
   }
 }
-
-// class MySearchDelegate extends SearchDelegate {
-//   @override
-//   Widget? BuildLeading(BuildContext context) => IconButton(
-//         onPressed: () => close(context, null),
-//         icon: const Icon(Icons.arrow_back),
-//       );
-
-//   @override
-//   List<Widget>? buildActions(BuildContext context) => [
-//         IconButton(
-//           onPressed: () {
-//             if (query.isEmpty) {
-//               close(context, null);
-//             } else {
-//               query = '';
-//             }
-//           },
-//           icon: const Icon(Icons.clear),
-//         ),
-//       ];
-
-//   @override
-//   Widget buildResults(BuildContext context) => Container();
-
-//   @override
-//   Widget buildSuggestions(BuildContext context) {
-//     List<String> suggestions = [
-//       'Serum',
-//       'Toner',
-//       'Essence',
-//     ];
-
-//     return ListView.builder(
-//       itemCount: suggestions.length,
-//       itemBuilder: (context, index) {
-//         final suggestion = suggestions[index];
-
-//         return ListTile(
-//           title: Text(suggestion),
-//           onTap: () {
-//             query = suggestion;
-//           },
-//         );
-//       },
-//     );
-//   }
-// }

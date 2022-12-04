@@ -1,9 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:glowskin_project/unused/cardproduct.dart';
 import 'package:glowskin_project/model/product.dart';
 import 'package:glowskin_project/users/detailpage.dart';
+import 'package:glowskin_project/widgets/widget_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:glowskin_project/users/profilepage.dart';
+import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'dart:io';
+
 import 'package:glowskin_project/users/search.dart';
+
+int catIndex = 0;
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,8 +20,65 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String url =
+      Platform.isAndroid ? "http://192.168.1.26:3001" : 'http://localhost:3001';
+
+  int id_cat = 0;
+
+  Future filterByCategoryProducts() async {
+    try {
+      var response;
+      id_cat > 0
+          ? response =
+              await Dio().get(url + '/product/get-product-by-category/$id_cat')
+          : response = await Dio().get(url + '/product/get-all-product');
+      print(response.data);
+      // setState(() {
+      //   response.data;
+      // });
+      return response.data;
+    } catch (e) {
+      print(e);
+      if (e is DioError) {
+        print(e.response!.data);
+      }
+    }
+  }
+
+  Future getProducts() async {
+    var response = await Dio().get(url + '/product/get-all-product');
+    try {
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future getProductsID(id_barang) async {
+    try {
+      var dio = Dio();
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      SharedPreferences id = await SharedPreferences.getInstance();
+      id.setString('id', id_barang);
+      var response =
+          await dio.get(url + '/product/get-product-by-id/$id_barang');
+      // print(response.data);
+      MaterialPageRoute route =
+          MaterialPageRoute(builder: (context) => DetailPage());
+      Navigator.push(context, route);
+    } catch (e) {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    getProducts();
     return Scaffold(
       body: ListView(
         children: [
@@ -97,84 +163,57 @@ class _HomePageState extends State<HomePage> {
                               Container(
                                 margin: const EdgeInsets.only(right: 16),
                                 child: OutlinedButton(
-                                  onPressed: () {},
-                                  child: Text('All'),
-                                  style: ButtonStyle(
-                                      fixedSize: MaterialStateProperty.all(
-                                        Size(53, 42),
-                                      ),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                      ),
-                                      side: MaterialStateProperty.all(
-                                          BorderSide(
-                                              color: Colors.black
-                                                  .withOpacity(0.25)))),
-                                ),
+                                    onPressed: () {
+                                      setState(() {
+                                        id_cat = 0;
+                                        filterByCategoryProducts();
+                                        // final changeColor = true;
+                                      });
+                                    },
+                                    child: Text('All'),
+                                    style: WidgetHelper().btnCategoryStyle(
+                                        id_cat == 0 ? true : false)),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(right: 16),
                                 child: OutlinedButton(
-                                  onPressed: () {},
-                                  child: Text('Serum'),
-                                  style: ButtonStyle(
-                                      fixedSize: MaterialStateProperty.all(
-                                        Size(87, 42),
-                                      ),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                      ),
-                                      side: MaterialStateProperty.all(
-                                          BorderSide(color: Colors.black))),
-                                ),
+                                    onPressed: () {
+                                      setState(() {
+                                        id_cat = 1;
+                                        filterByCategoryProducts();
+                                        print(id_cat);
+                                      });
+                                    },
+                                    child: Text('Serum'),
+                                    style: WidgetHelper().btnCategoryStyle(
+                                        (id_cat == 1) ? true : false)),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(right: 16),
                                 child: OutlinedButton(
-                                  onPressed: () {},
-                                  child: Text('Toner'),
-                                  style: ButtonStyle(
-                                      fixedSize: MaterialStateProperty.all(
-                                        Size(99, 42),
-                                      ),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                      ),
-                                      side: MaterialStateProperty.all(
-                                          BorderSide(
-                                              color: Colors.black
-                                                  .withOpacity(0.25)))),
-                                ),
+                                    onPressed: () {
+                                      setState(() {
+                                        id_cat = 2;
+                                        filterByCategoryProducts();
+                                        print(id_cat);
+                                      });
+                                    },
+                                    child: Text('Toner'),
+                                    style: WidgetHelper().btnCategoryStyle(
+                                        (id_cat == 2) ? true : false)),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(right: 16),
                                 child: OutlinedButton(
-                                  onPressed: () {},
-                                  child: Text('Essence'),
-                                  style: ButtonStyle(
-                                      fixedSize: MaterialStateProperty.all(
-                                        Size(99, 42),
-                                      ),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                      ),
-                                      side: MaterialStateProperty.all(
-                                          BorderSide(
-                                              color: Colors.black
-                                                  .withOpacity(0.25)))),
-                                ),
+                                    onPressed: () {
+                                      setState(() {
+                                        id_cat = 3;
+                                        filterByCategoryProducts();
+                                      });
+                                    },
+                                    child: Text('Essence'),
+                                    style: WidgetHelper().btnCategoryStyle(
+                                        (id_cat == 3) ? true : false)),
                               ),
                             ],
                           ),
@@ -182,103 +221,119 @@ class _HomePageState extends State<HomePage> {
                       ),
                       SizedBox(height: 20),
                       Container(
-                          height: 360,
-                          child: ListView.builder(
-                              itemCount: productList.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                Product product = productList[index];
-                                return Container(
-                                  width: 208,
-                                  height: 349,
-                                  margin: const EdgeInsets.only(right: 20),
-                                  decoration: BoxDecoration(
-                                      color: Color(0xFFD9D9D9),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Column(children: [
-                                    Container(
-                                      height: 240,
-                                      margin: const EdgeInsets.only(
-                                          left: 10,
-                                          right: 15,
-                                          top: 33,
-                                          bottom: 18),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          RotatedBox(
-                                            quarterTurns: -45,
-                                            child: Text(
-                                              product.name,
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Image.network(
-                                              product.imageUrl,
-                                              fit: BoxFit.cover,
-                                              alignment:
-                                                  new Alignment(-4.0, -1.0),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Row(
+                        height: 360,
+                        child: FutureBuilder(
+                          future: filterByCategoryProducts(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data['products'].length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    width: 208,
+                                    height: 349,
+                                    margin: const EdgeInsets.only(right: 20),
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFFD9D9D9),
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Column(
                                       children: [
                                         Container(
-                                          width: 129,
-                                          height: 51,
-                                          margin:
-                                              const EdgeInsets.only(left: 10),
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                return DetailPage(
-                                                    productList[index]);
-                                              }));
-                                            },
-                                            child: Text(
-                                              'Detail',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            25))),
-                                          ),
-                                        ),
-                                        Container(
+                                          height: 240,
                                           margin: const EdgeInsets.only(
-                                              left: 6, right: 10),
-                                          height: 53,
-                                          child: SizedBox.fromSize(
-                                            size: Size(53, 53),
-                                            child: ClipOval(
-                                                child: Material(
-                                              color: Colors.black,
-                                              child: InkWell(
-                                                onTap: () {},
-                                                child: Icon(
-                                                  Icons.favorite,
-                                                  color: Colors.white,
+                                              top: 33,
+                                              left: 10,
+                                              right: 15,
+                                              bottom: 18),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              RotatedBox(
+                                                quarterTurns: -45,
+                                                child: Text(
+                                                  snapshot.data['products']
+                                                      [index]['nama_barang'],
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                  ),
                                                 ),
                                               ),
-                                            )),
+                                              Expanded(
+                                                child: Image.network(
+                                                  snapshot.data['products']
+                                                      [index]['foto_barang'],
+                                                  fit: BoxFit.cover,
+                                                  alignment:
+                                                      (Alignment(-4.0, -1.0)),
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 129,
+                                              height: 51,
+                                              margin: const EdgeInsets.only(
+                                                  left: 10),
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  getProductsID(
+                                                      snapshot.data['products']
+                                                          [index]['_id']);
+                                                },
+                                                child: Text(
+                                                  'Detail',
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: Colors.white,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25)),
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  left: 6, right: 10),
+                                              height: 53,
+                                              child: SizedBox.fromSize(
+                                                  size: Size(53, 53),
+                                                  child: ClipOval(
+                                                    child: Material(
+                                                      color: Colors.black,
+                                                      child: InkWell(
+                                                        onTap: (() {}),
+                                                        child: Icon(
+                                                          Icons.favorite,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )),
+                                            )
+                                          ],
+                                        )
                                       ],
                                     ),
-                                  ]),
-                                );
-                              })),
+                                  );
+                                },
+                              );
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        ),
+                      )
                     ],
                   ),
                 ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:glowskin_project/constans.dart';
-// import 'package:glowskin_project/users/fav.dart';
 import 'package:glowskin_project/users/favoritepage.dart';
 import 'package:glowskin_project/users/homepage.dart';
 import 'package:glowskin_project/users/profilepage.dart';
