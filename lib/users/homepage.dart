@@ -262,9 +262,9 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               ),
                                               Expanded(
-                                                child: Image.network(
-                                                  snapshot.data['products']
-                                                      [index]['foto_barang'],
+                                                child: Image(
+                                                  image: NetworkImage(snapshot.data['products'][index]['foto_barang']),
+                                                  // snapshot.data['products'][index][''],
                                                   fit: BoxFit.cover,
                                                   alignment:
                                                       (Alignment(-4.0, -1.0)),
