@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:glowskin_project/unused/cardproduct.dart';
 import 'package:glowskin_project/model/product.dart';
 import 'package:glowskin_project/users/detailpage.dart';
+import 'package:glowskin_project/widgets/widget_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:glowskin_project/users/profilepage.dart';
 import 'package:http/http.dart' as http;
@@ -10,12 +12,36 @@ import 'dart:io';
 
 import 'package:glowskin_project/users/search.dart';
 
+int catIndex = 0;
+
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
+  int id_cat = 0;
+
+  Future filterByCategoryProducts() async {
+    try {
+      var response;
+      id_cat > 0
+          ? response =
+              await Dio().get(url + '/product/get-product-by-category/$id_cat')
+          : response = await Dio().get(url + '/product/get-all-product');
+      print(response.data);
+      // setState(() {
+      //   response.data;
+      // });
+      return response.data;
+    } catch (e) {
+      print(e);
+      if (e is DioError) {
+        print(e.response!.data);
+      }
+    }
+  }
   // String url = Platform.isAndroid ? "http://192.168.1.24:3001" : 'http://localhost:3001';
   String url = 'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
 
@@ -171,84 +197,57 @@ class _HomePageState extends State<HomePage> {
                               Container(
                                 margin: const EdgeInsets.only(right: 16),
                                 child: OutlinedButton(
-                                  onPressed: () {},
-                                  child: Text('All'),
-                                  style: ButtonStyle(
-                                      fixedSize: MaterialStateProperty.all(
-                                        Size(53, 42),
-                                      ),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                      ),
-                                      side: MaterialStateProperty.all(
-                                          BorderSide(
-                                              color: Colors.black
-                                                  .withOpacity(0.25)))),
-                                ),
+                                    onPressed: () {
+                                      setState(() {
+                                        id_cat = 0;
+                                        filterByCategoryProducts();
+                                        // final changeColor = true;
+                                      });
+                                    },
+                                    child: Text('All'),
+                                    style: WidgetHelper().btnCategoryStyle(
+                                        id_cat == 0 ? true : false)),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(right: 16),
                                 child: OutlinedButton(
-                                  onPressed: () {},
-                                  child: Text('Serum'),
-                                  style: ButtonStyle(
-                                      fixedSize: MaterialStateProperty.all(
-                                        Size(87, 42),
-                                      ),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                      ),
-                                      side: MaterialStateProperty.all(
-                                          BorderSide(color: Colors.black))),
-                                ),
+                                    onPressed: () {
+                                      setState(() {
+                                        id_cat = 1;
+                                        filterByCategoryProducts();
+                                        print(id_cat);
+                                      });
+                                    },
+                                    child: Text('Serum'),
+                                    style: WidgetHelper().btnCategoryStyle(
+                                        (id_cat == 1) ? true : false)),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(right: 16),
                                 child: OutlinedButton(
-                                  onPressed: () {},
-                                  child: Text('Toner'),
-                                  style: ButtonStyle(
-                                      fixedSize: MaterialStateProperty.all(
-                                        Size(99, 42),
-                                      ),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                      ),
-                                      side: MaterialStateProperty.all(
-                                          BorderSide(
-                                              color: Colors.black
-                                                  .withOpacity(0.25)))),
-                                ),
+                                    onPressed: () {
+                                      setState(() {
+                                        id_cat = 2;
+                                        filterByCategoryProducts();
+                                        print(id_cat);
+                                      });
+                                    },
+                                    child: Text('Toner'),
+                                    style: WidgetHelper().btnCategoryStyle(
+                                        (id_cat == 2) ? true : false)),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(right: 16),
                                 child: OutlinedButton(
-                                  onPressed: () {},
-                                  child: Text('Essence'),
-                                  style: ButtonStyle(
-                                      fixedSize: MaterialStateProperty.all(
-                                        Size(99, 42),
-                                      ),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                      ),
-                                      side: MaterialStateProperty.all(
-                                          BorderSide(
-                                              color: Colors.black
-                                                  .withOpacity(0.25)))),
-                                ),
+                                    onPressed: () {
+                                      setState(() {
+                                        id_cat = 3;
+                                        filterByCategoryProducts();
+                                      });
+                                    },
+                                    child: Text('Essence'),
+                                    style: WidgetHelper().btnCategoryStyle(
+                                        (id_cat == 3) ? true : false)),
                               ),
                             ],
                           ),
@@ -258,7 +257,7 @@ class _HomePageState extends State<HomePage> {
                       Container(
                         height: 360,
                         child: FutureBuilder(
-                          future: getProducts(),
+                          future: filterByCategoryProducts(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return ListView.builder(

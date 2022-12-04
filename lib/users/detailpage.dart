@@ -8,7 +8,8 @@ import 'package:glowskin_project/users/landingpage2.dart';
 
 class DetailPage extends StatelessWidget {
   // String url = Platform.isAndroid ? "http://192.168.1.24:3001" : 'http://localhost:3001';
-  String url = 'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
+  String url =
+      'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
 
   Future getDetailbyID() async {
     try {
@@ -116,7 +117,8 @@ class DetailPage extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           image: DecorationImage(
                                             image: NetworkImage(
-                                                snapshot.data['products']['foto_barang']),
+                                                snapshot.data['products']
+                                                    ['foto_barang']),
                                             fit: BoxFit.cover,
                                           ),
                                         ),
@@ -486,7 +488,8 @@ class DetailPage extends StatelessWidget {
                                           width: 85,
                                           height: 57,
                                           child: ElevatedButton(
-                                            onPressed: () {},
+                                            onPressed: () =>
+                                                _dialogBuilder(context),
                                             child: Icon(Icons.message),
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor:
@@ -528,5 +531,42 @@ class DetailPage extends StatelessWidget {
                       }
                       return Center(child: CircularProgressIndicator());
                     }))));
+  }
+
+  Future<void> _dialogBuilder(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Review'),
+          content: const TextField(
+            autofocus: true,
+            decoration: InputDecoration(
+              hintText: 'Tulis ulasan',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Submit'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
