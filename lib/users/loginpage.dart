@@ -81,8 +81,8 @@ class _LoginPageState extends State<LoginPage> {
       );
     } catch (e) {
       if (e is DioError) {
-        print(e.response!.data);
-        print(e.response!.statusCode);
+        // print(e.response!.data);
+        // print(e.response!.statusCode);
         AlertDialog alert = AlertDialog(
           title: Text("Login"),
           content: Text(e.response!.data['error']['message']),
