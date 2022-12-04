@@ -49,7 +49,7 @@ class _SearchPageState extends State<SearchPage> {
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers["accept"] = "application/json";
       SharedPreferences id = await SharedPreferences.getInstance();
-      id.setString('id', id_barang);
+      id.setString('id_barang', id_barang);
       var response =
           await dio.get(url + '/product/get-product-by-id/$id_barang');
       // print(response.data);
