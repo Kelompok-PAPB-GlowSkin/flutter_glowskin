@@ -44,7 +44,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // String url = Platform.isAndroid ? 'http://192.168.1.24:3001' : 'http://localhost:3001';
-  String url = 'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
+  String url =
+      'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
 
   Future login() async {
     try {
@@ -53,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
       dio.options.headers["accept"] = "application/json";
       var response = await dio.post(url + '/user/login',
           data: {"email": email, "password": password});
-      // print(response.data['token']);
+      print(response.data['token']);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', response.data['token']);
       prefs.setString('email', response.data['email']);

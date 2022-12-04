@@ -14,8 +14,8 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
-
-  String url = 'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
+  String url =
+      'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
 
   Future getFavoriteByUser() async {
     try {
@@ -64,6 +64,7 @@ class _FavoritePageState extends State<FavoritePage> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     // getFavoriteByUser();
@@ -84,35 +85,66 @@ class _FavoritePageState extends State<FavoritePage> {
             ),
             SizedBox(height: 20),
             Container(
-              child: Expanded(
-                child: SlidableAutoCloseBehavior(
-                  closeWhenOpened: true,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: productList.length,
-                      itemBuilder: ((context, index) {
-                        final Product product = productList[index];
-                        return Slidable(
-                          key: Key(product.name),
-                          endActionPane: ActionPane(
-                            motion: const StretchMotion(),
-                            dismissible: DismissiblePane(
-                                onDismissed: () =>
-                                    _onDismissed(index, Actions.delete)),
-                            children: [
-                              SlidableAction(
-                                backgroundColor: Colors.red,
-                                icon: Icons.delete,
-                                label: 'Delete',
-                                onPressed: (context) =>
-                                    _onDismissed(index, Actions.delete),
-                              ),
-                            ],
-                          ),
-                          child: buildProductListTile(product),
-                        );
-                      })),
-                ),
+              child: FutureBuilder(
+                future: getFavoriteByUser(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Container(
+                      child: Expanded(
+                        child: SlidableAutoCloseBehavior(
+                          closeWhenOpened: true,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data['products'].length,
+                              itemBuilder: ((context, index) {
+                                final Product product =
+                                    snapshot.data['products'][index];
+                                return Slidable(
+                                  key: Key(snapshot.data['products'][index]
+                                      ['nama_barang']),
+                                  endActionPane: ActionPane(
+                                    motion: const StretchMotion(),
+                                    // dismissible: DismissiblePane(
+                                    //     onDismissed: () => _onDismissed(
+                                    //         index, Actions.delete)),
+                                    children: [
+                                      SlidableAction(
+                                          backgroundColor: Colors.red,
+                                          icon: Icons.delete,
+                                          label: 'Delete',
+                                          onPressed: (context) {}
+                                          // _onDismissed(index, Actions.delete),
+                                          ),
+                                    ],
+                                  ),
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.all(16),
+                                    title: Text(
+                                      product.name,
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    leading: Image.network(product.imageUrl),
+                                    onTap: () {
+                                      // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                                      //   return DetailPage(produc);
+                                      // }));
+                                      final slidable = Slidable.of(context)!;
+                                      final isClosed =
+                                          slidable.actionPaneType.value ==
+                                              ActionPaneType.none;
+                                      if (isClosed) {
+                                        slidable.openStartActionPane();
+                                      }
+                                    },
+                                  ),
+                                );
+                              })),
+                        ),
+                      ),
+                    );
+                  }
+                  return Text("Produk Favoritmu Masih Kosong");
+                },
               ),
             ),
           ],
@@ -121,41 +153,23 @@ class _FavoritePageState extends State<FavoritePage> {
     );
   }
 
-  void _onDismissed(int index, Actions action) {
-    final Product product = productList[index];
-    setState(() => productList.removeAt(index));
+  // void _onDismissed(int index, Actions action) {
+  //   final Product product = snapshot.data['products'][index];
+  //   setState(() => productList.removeAt(index));
 
-    switch (action) {
-      case Actions.delete:
-        _showSnackBar(context, '${product.name} is deleted', Colors.red);
-        break;
-    }
-  }
+  //   switch (action) {
+  //     case Actions.delete:
+  //       _showSnackBar(context, '${product.name} is deleted', Colors.red);
+  //       break;
+  //   }
+  // }
 
   void _showSnackBar(BuildContext context, String message, Color color) {
     final snackBar = SnackBar(content: Text(message), backgroundColor: color);
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  Widget buildProductListTile(Product product) => Builder(builder: (context) {
-        return ListTile(
-          contentPadding: const EdgeInsets.all(16),
-          title: Text(
-            product.name,
-            style: TextStyle(fontSize: 20),
-          ),
-          leading: Image.network(product.imageUrl),
-          onTap: () {
-            // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            //   return DetailPage(produc);
-            // }));
-            final slidable = Slidable.of(context)!;
-            final isClosed =
-                slidable.actionPaneType.value == ActionPaneType.none;
-            if (isClosed) {
-              slidable.openStartActionPane();
-            }
-          },
-        );
-      });
+  // Widget buildProductListTile(Product product) => Builder(builder: (context) {
+  //       return
+  //     });
 }
