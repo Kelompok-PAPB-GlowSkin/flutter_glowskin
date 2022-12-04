@@ -13,6 +13,7 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   TextEditingController _controller = TextEditingController();
+  bool _validate = false;
 
   String reviewtext = "";
 
@@ -45,6 +46,9 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Future createReview(review) async {
+    if (review == "") {
+      return;
+    } else {
     try{
       SharedPreferences akun = await SharedPreferences.getInstance();
       String id_akun = akun.getString('id_akun')!;
@@ -67,6 +71,7 @@ class _DetailPageState extends State<DetailPage> {
         print(e.response!.statusCode);
       }
     }
+  }
   }
   
   Future getReviewByProduct() async {
