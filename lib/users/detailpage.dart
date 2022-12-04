@@ -6,27 +6,94 @@ import 'package:flutter/material.dart';
 import 'package:glowskin_project/model/product.dart';
 import 'package:glowskin_project/users/landingpage2.dart';
 
-class DetailPage extends StatelessWidget {
-  String url =
-      Platform.isAndroid ? "http://192.168.1.26:3001" : 'http://localhost:3001';
+class DetailPage extends StatefulWidget {
+  @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  TextEditingController _controller = TextEditingController();
+
+  String reviewtext = "";
+
+  _DetailPageState() {
+    _controller.addListener(() {
+      setState(() {
+        reviewtext = _controller.text;
+      });
+    });
+  }
+
+  // String url = Platform.isAndroid ? "http://192.168.1.26:3001" : 'http://localhost:3001';
+  String url = 'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
 
   Future getDetailbyID() async {
     try {
       SharedPreferences id = await SharedPreferences.getInstance();
       String id_barang = id.getString('id')!;
-      print(id_barang);
       var dio = Dio();
       var response =
           await dio.get(url + '/product/get-product-by-id/$id_barang');
-      print(response.data['products']);
       return response.data;
     } catch (e) {
       print(e);
+      if(e is DioError){
+        print(e.response!.data);
+        print(e.response!.statusCode);
+      }
+    }
+  }
+
+  Future createReview(review) async {
+    try{
+      SharedPreferences akun = await SharedPreferences.getInstance();
+      String id_akun = akun.getString('id_akun')!;
+      String nama = akun.getString('nama')!;
+      SharedPreferences id = await SharedPreferences.getInstance();
+      String id_barang = id.getString('id_barang')!;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('token')!;
+      var dio = Dio();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      var response = await dio.post(url + '/review/add-review',
+          data: {"id_akun": id_akun, "id_barang": id_barang, "nama_akun": nama, "review": review});
+      return response.data;
+    } catch (e) {
+      print(e);
+      if(e is DioError){
+        print(e.response!.data);
+        print(e.response!.statusCode);
+      }
+    }
+  }
+  
+  Future getReviewByProduct() async {
+    try{
+      SharedPreferences id = await SharedPreferences.getInstance();
+      String id_barang = id.getString('id')!;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('token')!;
+      var dio = Dio();
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var response = await dio.get(url + '/review/get-review-by-product-id/$id_barang');
+      print(response.data);
+      return response.data;
+    } catch (e) {
+      print(e);
+      if(e is DioError){
+        print(e.response!.data);
+        print(e.response!.statusCode);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    getReviewByProduct();
     return Scaffold(
         body: Padding(
             padding: const EdgeInsets.only(top: 30),
@@ -417,63 +484,84 @@ class DetailPage extends StatelessWidget {
                                   ),
                                 ),
                                 Container(
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        child: Column(children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Susi',
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight:
-                                                        FontWeight.w500),
+                                  height: 100,
+                                  child: FutureBuilder(
+                                    future: getReviewByProduct(),
+                                    builder: (context, snapshot) {
+                                      if(snapshot.hasData){
+                                        return ListView.builder(
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: snapshot.data['reviews'].length,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    height: 80,
+                                                    child: Column(children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            snapshot.data['reviews'][index]['nama_akun'],
+                                                            style: TextStyle(
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight.w500),
+                                                          ),
+                                                          Container(
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(
+                                                                  Icons.star,
+                                                                  color: Color(0xff51AD99),
+                                                                ),
+                                                                Icon(
+                                                                  Icons.star,
+                                                                  color: Color(0xff51AD99),
+                                                                ),
+                                                                Icon(
+                                                                  Icons.star,
+                                                                  color: Color(0xff51AD99),
+                                                                ),
+                                                                Icon(
+                                                                  Icons.star,
+                                                                  color: Color(0xff51AD99),
+                                                                ),
+                                                                Icon(
+                                                                  Icons.star,
+                                                                  color: Colors.grey,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Container(
+                                                        margin:
+                                                            const EdgeInsets.only(top: 13),
+                                                        alignment: Alignment.topLeft,
+                                                        child: Text(
+                                                          snapshot.data['reviews'][index]['review'],
+                                                          style: TextStyle(
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w400),
+                                                        ),
+                                                      ),
+                                                    ]),
+                                                  )
+                                                ],
                                               ),
-                                              Container(
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.star,
-                                                      color: Color(0xff51AD99),
-                                                    ),
-                                                    Icon(
-                                                      Icons.star,
-                                                      color: Color(0xff51AD99),
-                                                    ),
-                                                    Icon(
-                                                      Icons.star,
-                                                      color: Color(0xff51AD99),
-                                                    ),
-                                                    Icon(
-                                                      Icons.star,
-                                                      color: Color(0xff51AD99),
-                                                    ),
-                                                    Icon(
-                                                      Icons.star,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Container(
-                                            margin:
-                                                const EdgeInsets.only(top: 13),
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              'Bagus serumnya cocok untuk muka saya',
-                                              style: TextStyle(
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                          ),
-                                        ]),
-                                      )
-                                    ],
+                                            );
+                                          },
+                                        );
+                                      }else{
+                                        return Container(
+                                          child: Text('No Review'),
+                                        );
+                                      }
+                                    },
                                   ),
                                 ),
                                 Container(
@@ -538,7 +626,8 @@ class DetailPage extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Review'),
-          content: const TextField(
+          content: TextField(
+            controller: _controller,
             autofocus: true,
             decoration: InputDecoration(
               hintText: 'Tulis ulasan',
@@ -560,6 +649,7 @@ class DetailPage extends StatelessWidget {
               ),
               child: const Text('Submit'),
               onPressed: () {
+                createReview(_controller.text);
                 Navigator.of(context).pop();
               },
             ),
