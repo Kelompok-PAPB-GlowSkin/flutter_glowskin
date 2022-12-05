@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -212,10 +213,7 @@ class _DetailPageState extends State<DetailPage> {
                                         width: 50,
                                         height: 50,
                                         child: OutlinedButton(
-                                          onPressed: () {
-                                            addFavorite(snapshot
-                                                .data['products']['_id']);
-                                          },
+                                          onPressed: () {},
                                           child: Icon(
                                             Icons.favorite_outline,
                                             color: Colors.black,
@@ -654,10 +652,7 @@ class _DetailPageState extends State<DetailPage> {
                                           width: 198,
                                           height: 57,
                                           child: ElevatedButton(
-                                            onPressed: () {
-                                              addFavorite(snapshot
-                                                  .data['products']['_id']);
-                                            },
+                                            onPressed: () {},
                                             child: Text(
                                               'Add To Favorite',
                                               style: TextStyle(

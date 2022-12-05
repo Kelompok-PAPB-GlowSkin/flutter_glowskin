@@ -62,9 +62,7 @@ class _FavoritePageState extends State<FavoritePage> {
         // print(response.data);
         list_barang[i] = response.data;
       }
-      print("list_barang");
-      print(data);
-      print(list_barang);
+      // print(list_barang);
       return list_barang;
     } catch (e) {
       print(e);
@@ -75,10 +73,8 @@ class _FavoritePageState extends State<FavoritePage> {
     }
   }
 
-  Future deleteFavorite(id_barang) async {
+  Future deleteFavorite(id) async {
     try {
-      var id;
-      id.setString('id_barang', id_barang);
       var dio = Dio();
       final prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token')!;
@@ -96,24 +92,6 @@ class _FavoritePageState extends State<FavoritePage> {
         print(e.response!.data);
         print(e.response!.statusCode);
       }
-    }
-  }
-
-  Future getProductsID(id_barang) async {
-    try {
-      var dio = Dio();
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers["accept"] = "application/json";
-      SharedPreferences id = await SharedPreferences.getInstance();
-      id.setString('id_barang', id_barang);
-      var response =
-          await dio.get(url + '/product/get-product-by-id/$id_barang');
-      // print(response.data);
-      MaterialPageRoute route =
-          MaterialPageRoute(builder: (context) => DetailPage());
-      Navigator.push(context, route);
-    } catch (e) {
-      return null;
     }
   }
 
@@ -145,93 +123,67 @@ class _FavoritePageState extends State<FavoritePage> {
                     for (int i = 0; i < snapshot.data.length; i++) {
                       print(snapshot.data[i]);
                       return Expanded(
-                        child: Container(
-                          child: SlidableAutoCloseBehavior(
-                            closeWhenOpened: true,
-                            child: snapshot.data!.length == 0
-                                ? Container(
-                                    child: Center(
-                                      child: Text(
-                                          "Kamu Belum Memiliki Produk Favorite"),
-                                    ),
-                                  )
-                                : ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: snapshot.data.length,
-                                    itemBuilder: ((context, index) {
-                                      // final product =
-                                      //     snapshot.data['favorites'][index];
-                                      return Slidable(
-                                        key: Key(snapshot.data[index]
-                                            ['products']['_id']),
-                                        endActionPane: ActionPane(
-                                          motion: const StretchMotion(),
-                                          dismissible:
-                                              DismissiblePane(onDismissed: () {
-                                            setState(() {
-                                              deleteFavorite(
-                                                  snapshot.data[index]
-                                                      ['products']['_id']);
-                                              _showSnackBar(
-                                                  context,
-                                                  '${snapshot.data[index]['products']['nama_barang']} is deleted',
-                                                  Colors.red);
-                                            });
-                                          }),
-                                          children: [
-                                            SlidableAction(
-                                                backgroundColor: Colors.red,
-                                                icon: Icons.delete,
-                                                label: 'Delete',
-                                                onPressed: (context) {
-                                                  setState(() {
-                                                    deleteFavorite(snapshot
-                                                            .data[index]
-                                                        ['products']['_id']);
-                                                    _showSnackBar(
-                                                        context,
-                                                        '${snapshot.data[index]['products']['nama_barang']} is deleted',
-                                                        Colors.red);
-                                                  });
-                                                })
-                                          ],
+                      child: Container(
+                        child: SlidableAutoCloseBehavior(
+                          closeWhenOpened: true,
+                          child: snapshot.data!.length == 0
+                              ? Container(
+                                  child: Center(
+                                    child: Text(
+                                        "Kamu Belum Memiliki Produk Favorite"),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder: ((context, index) {
+                                    // final product =
+                                    //     snapshot.data['favorites'][index];
+                                    return Slidable(
+                                      key: Key(snapshot.data[index]['products']['_id']),
+                                      endActionPane: ActionPane(
+                                        motion: const StretchMotion(),
+                                        // dismissible: DismissiblePane(
+                                        //     onDismissed: () => _onDismissed(
+                                        //         index, Actions.delete)),
+                                        children: [
+                                          SlidableAction(
+                                              backgroundColor: Colors.red,
+                                              icon: Icons.delete,
+                                              label: 'Delete',
+                                              onPressed: (context) {}
+                                              // _onDismissed(index, Actions.delete),
+                                              ),
+                                        ],
+                                      ),
+                                      child: ListTile(
+                                        contentPadding:
+                                            const EdgeInsets.all(16),
+                                        title: Text(
+                                          snapshot.data[index]['products']['nama_barang'],
+                                          style: TextStyle(fontSize: 20),
                                         ),
-                                        child: ListTile(
-                                          contentPadding:
-                                              const EdgeInsets.all(16),
-                                          title: Text(
-                                            snapshot.data[index]['products']
-                                                ['nama_barang'],
-                                            overflow: TextOverflow.clip,
-                                            style: TextStyle(fontSize: 20),
-                                          ),
-                                          leading: Container(
-                                            width: 40,
-                                            height: 40,
-                                            child: Image.network(
-                                              snapshot.data[index]['products']
-                                                  ['foto_barang'],
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          onTap: () {
-                                            getProductsID(snapshot.data[index]
-                                                ['products']['_id']);
-                                            final slidable =
-                                                Slidable.of(context)!;
-                                            final isClosed =
-                                                slidable.actionPaneType.value ==
-                                                    ActionPaneType.none;
-                                            if (isClosed) {
-                                              slidable.openStartActionPane();
-                                            }
-                                          },
-                                        ),
-                                      );
-                                    })),
-                          ),
+                                        leading: Image.network(
+                                            snapshot.data[index]['products']['foto_barang']),
+                                        onTap: () {
+                                          // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                                          //   return DetailPage(produc);
+                                          // }));
+                                          final slidable =
+                                              Slidable.of(context)!;
+                                          final isClosed =
+                                              slidable.actionPaneType.value ==
+                                                  ActionPaneType.none;
+                                          if (isClosed) {
+                                            slidable.openStartActionPane();
+                                          }
+                                        },
+                                      ),
+                                    );
+                                  })),
                         ),
-                      );
+                      ),
+                    );
                     }
                   }
                   return Center(
@@ -247,8 +199,8 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   // void _onDismissed(int index, Actions action) {
-  //   // final Product product = snapshot.data['products'][index];
-  //   setState(() => snapshot.data.removeAt(index));
+  //   final Product product = snapshot.data['products'][index];
+  //   setState(() => productList.removeAt(index));
 
   //   switch (action) {
   //     case Actions.delete:
@@ -261,4 +213,8 @@ class _FavoritePageState extends State<FavoritePage> {
     final snackBar = SnackBar(content: Text(message), backgroundColor: color);
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
+
+  // Widget buildProductListTile(Product product) => Builder(builder: (context) {
+  //       return
+  //     });
 }
