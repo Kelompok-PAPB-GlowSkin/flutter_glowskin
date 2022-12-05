@@ -6,20 +6,18 @@ import 'package:glowskin_project/users/editprofilepage.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
 
-
 class ProfilPage extends StatefulWidget {
   @override
   State<ProfilPage> createState() => _ProfilPageState();
 }
 
-
 class _ProfilPageState extends State<ProfilPage> {
   @override
-
-  String url = 'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
+  String url =
+      'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
 
   Future getUser() async {
-    try{
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       SharedPreferences akun = await SharedPreferences.getInstance();
       String token = prefs.getString('token')!;
@@ -28,15 +26,11 @@ class _ProfilPageState extends State<ProfilPage> {
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers["accept"] = "application/json";
       var response = await dio.get(url + '/user/get-user-by-email/$email');
-      akun.setString('id', response.data['_id']);
-      print(response.data);
-      setState(() {
-        response.data;
-      });
+      akun.setString('id_akun', response.data['_id']);
       return response.data;
-    }catch(e){
+    } catch (e) {
       print(e);
-      if(e is DioError){
+      if (e is DioError) {
         print(e.response!.data);
         print(e.response!.statusCode);
       }
@@ -60,12 +54,11 @@ class _ProfilPageState extends State<ProfilPage> {
                   width: 60,
                   height: 60,
                   child: OutlinedButton(
-                    onPressed: () {},
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: Colors.black, 
-                      size: 30
-                      ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child:
+                        Icon(Icons.arrow_back, color: Colors.black, size: 30),
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
@@ -92,20 +85,20 @@ class _ProfilPageState extends State<ProfilPage> {
             Container(
               padding: EdgeInsets.only(top: 50),
               child: ProfileWidget(
-                  imagePath : user.imagePaths,
-                  onClicked : () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => EditProfilePage(),
-                    ));
-                  },
+                imagePath: user.imagePaths,
+                onClicked: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EditProfilePage(),
+                  ));
+                },
               ),
             ),
             Container(
               padding: EdgeInsets.only(top: 50),
               child: FutureBuilder(
                 future: getUser(),
-                builder: (context, snapshot){
-                  if(snapshot.hasData){
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
                     return Column(
                       children: <Widget>[
                         Container(
@@ -154,7 +147,7 @@ class _ProfilPageState extends State<ProfilPage> {
                         ),
                       ],
                     );
-                  }else{
+                  } else {
                     return Center(child: CircularProgressIndicator());
                   }
                 },

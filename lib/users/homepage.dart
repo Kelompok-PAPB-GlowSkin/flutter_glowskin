@@ -41,8 +41,10 @@ class _HomePageState extends State<HomePage> {
       }
     }
   }
+
   // String url = Platform.isAndroid ? "http://192.168.1.24:3001" : 'http://localhost:3001';
-  String url = 'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
+  String url =
+      'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
 
   Future getProducts() async {
     var response = await Dio().get(url + '/product/get-all-product');
@@ -58,14 +60,24 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future getUserID() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var dio = Dio();
-    var email = prefs.getString('email');
-    var response = await dio.get(url + '/user/get-user-by-email/$email');
-    prefs.setString('userID', response.data['_id']);
-    print(prefs.getString('userID'));
-    print(response.data);
-    return response.data;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('token')!;
+      String email = prefs.getString('email')!;
+      var dio = Dio();
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      var response = await dio.get(url + '/user/get-user-by-email/$email');
+      SharedPreferences akun = await SharedPreferences.getInstance();
+      akun.setString('id_akun', response.data['_id']);
+      akun.setString('nama', response.data['name']);
+      print(akun.getString('nama'));
+      print(response.data);
+      print(token);
+      return response.data;
+    } catch (e) {
+      return null;
+    }
   }
 
   Future getProductsID(id_barang) async {
@@ -118,7 +130,7 @@ class _HomePageState extends State<HomePage> {
       return response.data;
     } catch (e) {
       print(e);
-      if(e is DioError) {
+      if (e is DioError) {
         print(e.response!.data);
         AlertDialog alert = AlertDialog(
           title: Text('Error'),
@@ -195,7 +207,6 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(height: 20),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 25),
-                        width: 342,
                         height: 119,
                         decoration: BoxDecoration(
                             color: Color(0xffD2EAC2),
@@ -212,10 +223,12 @@ class _HomePageState extends State<HomePage> {
                                     fontSize: 26, fontWeight: FontWeight.w800),
                               ),
                             ),
-                            Image.asset(
-                              'assets/product.png',
-                              fit: BoxFit.cover,
-                              alignment: new Alignment(-4.0, -1.0),
+                            Container(
+                              child: Image.network(
+                                'https://firebasestorage.googleapis.com/v0/b/glowskin-product.appspot.com/o/product_image%2FJeju.png?alt=media&token=6ddd86f5-c8e0-4df7-bd10-9a734fada7e5',
+                                fit: BoxFit.cover,
+                                alignment: new Alignment(-4.0, -1.0),
+                              ),
                             )
                           ],
                         ),
@@ -378,8 +391,11 @@ class _HomePageState extends State<HomePage> {
                                                       child: InkWell(
                                                         onTap: (() {
                                                           // getProductsID(snapshot.data['products'][index]['_id']);
-                                                          addFavorite(
-                                                              snapshot.data['products'][index]['_id']);}),
+                                                          addFavorite(snapshot
+                                                                      .data[
+                                                                  'products']
+                                                              [index]['_id']);
+                                                        }),
                                                         child: Icon(
                                                           Icons.favorite,
                                                           color: Colors.white,

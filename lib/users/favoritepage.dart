@@ -95,6 +95,24 @@ class _FavoritePageState extends State<FavoritePage> {
     }
   }
 
+  Future getProductsID(id_barang) async {
+    try {
+      var dio = Dio();
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      SharedPreferences id = await SharedPreferences.getInstance();
+      id.setString('id_barang', id_barang);
+      var response =
+          await dio.get(url + '/product/get-product-by-id/$id_barang');
+      // print(response.data);
+      MaterialPageRoute route =
+          MaterialPageRoute(builder: (context) => DetailPage());
+      Navigator.push(context, route);
+    } catch (e) {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // getFavoriteByUser();
@@ -123,71 +141,99 @@ class _FavoritePageState extends State<FavoritePage> {
                     for (int i = 0; i < snapshot.data.length; i++) {
                       print(snapshot.data[i]);
                       return Expanded(
-                      child: Container(
-                        child: SlidableAutoCloseBehavior(
-                          closeWhenOpened: true,
-                          child: snapshot.data!.length == 0
-                              ? Container(
-                                  child: Center(
-                                    child: Text(
-                                        "Kamu Belum Memiliki Produk Favorite"),
-                                  ),
-                                )
-                              : ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: snapshot.data.length,
-                                  itemBuilder: ((context, index) {
-                                    // final product =
-                                    //     snapshot.data['favorites'][index];
-                                    return Slidable(
-                                      key: Key(snapshot.data[index]['products']['_id']),
-                                      endActionPane: ActionPane(
-                                        motion: const StretchMotion(),
-                                        // dismissible: DismissiblePane(
-                                        //     onDismissed: () => _onDismissed(
-                                        //         index, Actions.delete)),
-                                        children: [
-                                          SlidableAction(
-                                              backgroundColor: Colors.red,
-                                              icon: Icons.delete,
-                                              label: 'Delete',
-                                              onPressed: (context) {}
-                                              // _onDismissed(index, Actions.delete),
-                                              ),
-                                        ],
-                                      ),
-                                      child: ListTile(
-                                        contentPadding:
-                                            const EdgeInsets.all(16),
-                                        title: Text(
-                                          snapshot.data[index]['products']['nama_barang'],
-                                          style: TextStyle(fontSize: 20),
+                        child: Container(
+                          child: SlidableAutoCloseBehavior(
+                            closeWhenOpened: true,
+                            child: snapshot.data!.length == 0
+                                ? Container(
+                                    child: Center(
+                                      child: Text(
+                                          "Kamu Belum Memiliki Produk Favorite"),
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: snapshot.data.length,
+                                    itemBuilder: ((context, index) {
+                                      // final product =
+                                      //     snapshot.data['favorites'][index];
+                                      return Slidable(
+                                        key: Key(snapshot.data[index]
+                                            ['products']['_id']),
+                                        endActionPane: ActionPane(
+                                          motion: const StretchMotion(),
+                                          dismissible:
+                                              DismissiblePane(onDismissed: () {
+                                            setState(() {
+                                              deleteFavorite(
+                                                  snapshot.data[index]
+                                                      ['products']['_id']);
+                                              _showSnackBar(
+                                                  context,
+                                                  '${snapshot.data[index]['products']['nama_barang']} is deleted',
+                                                  Colors.red);
+                                            });
+                                          }),
+                                          children: [
+                                            SlidableAction(
+                                                backgroundColor: Colors.red,
+                                                icon: Icons.delete,
+                                                label: 'Delete',
+                                                onPressed: (context) {
+                                                  setState(() {
+                                                    deleteFavorite(snapshot
+                                                            .data[index]
+                                                        ['products']['_id']);
+                                                    _showSnackBar(
+                                                        context,
+                                                        '${snapshot.data[index]['products']['nama_barang']} is deleted',
+                                                        Colors.red);
+                                                  });
+                                                }),
+                                          ],
                                         ),
-                                        leading: Image.network(
-                                            snapshot.data[index]['products']['foto_barang']),
-                                        onTap: () {
-                                          // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                                          //   return DetailPage(produc);
-                                          // }));
-                                          final slidable =
-                                              Slidable.of(context)!;
-                                          final isClosed =
-                                              slidable.actionPaneType.value ==
-                                                  ActionPaneType.none;
-                                          if (isClosed) {
-                                            slidable.openStartActionPane();
-                                          }
-                                        },
-                                      ),
-                                    );
-                                  })),
+                                        child: ListTile(
+                                          contentPadding:
+                                              const EdgeInsets.all(16),
+                                          title: Text(
+                                            snapshot.data[index]['products']
+                                                ['nama_barang'],
+                                            overflow: TextOverflow.clip,
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          leading: Container(
+                                            width: 40,
+                                            height: 40,
+                                            child: Image.network(
+                                              snapshot.data[index]['products']
+                                                  ['foto_barang'],
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            getProductsID(snapshot.data[index]
+                                                ['products']['_id']);
+                                            final slidable =
+                                                Slidable.of(context)!;
+                                            final isClosed =
+                                                slidable.actionPaneType.value ==
+                                                    ActionPaneType.none;
+                                            if (isClosed) {
+                                              slidable.openStartActionPane();
+                                            }
+                                          },
+                                        ),
+                                      );
+                                    })),
+                          ),
                         ),
-                      ),
-                    );
+                      );
                     }
                   }
-                  return Center(
-                    child: CircularProgressIndicator(),
+                  return Container(
+                    child: Center(
+                      child: Text("Kamu Belum Memiliki Produk Favorite"),
+                    ),
                   );
                 },
               ),

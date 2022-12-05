@@ -26,19 +26,20 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   // String url = Platform.isAndroid ? "http://192.168.1.26:3001" : 'http://localhost:3001';
-  String url = 'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
+  String url =
+      'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
 
   Future getDetailbyID() async {
     try {
       SharedPreferences id = await SharedPreferences.getInstance();
-      String id_barang = id.getString('id')!;
+      String id_barang = id.getString('id_barang')!;
       var dio = Dio();
       var response =
           await dio.get(url + '/product/get-product-by-id/$id_barang');
       return response.data;
     } catch (e) {
       print(e);
-      if(e is DioError){
+      if (e is DioError) {
         print(e.response!.data);
         print(e.response!.statusCode);
       }
@@ -46,10 +47,7 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Future createReview(review) async {
-    if (review == "") {
-      return;
-    } else {
-    try{
+    try {
       SharedPreferences akun = await SharedPreferences.getInstance();
       String id_akun = akun.getString('id_akun')!;
       String nama = akun.getString('nama')!;
@@ -61,41 +59,44 @@ class _DetailPageState extends State<DetailPage> {
       dio.options.headers["Authorization"] = "Bearer $token";
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers["accept"] = "application/json";
-      var response = await dio.post(url + '/review/add-review',
-          data: {"id_akun": id_akun, "id_barang": id_barang, "nama_akun": nama, "review": review});
+      var response = await dio.post(url + '/review/add-review', data: {
+        "id_akun": id_akun,
+        "id_barang": id_barang,
+        "nama_akun": nama,
+        "review": review
+      });
       return response.data;
     } catch (e) {
       print(e);
-      if(e is DioError){
-        print(e.response!.data);
-        print(e.response!.statusCode);
-      }
-    }
-  }
-  }
-  
-  Future getReviewByProduct() async {
-    try{
-      SharedPreferences id = await SharedPreferences.getInstance();
-      String id_barang = id.getString('id')!;
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString('token')!;
-      var dio = Dio();
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers["accept"] = "application/json";
-      dio.options.headers["Authorization"] = "Bearer $token";
-      var response = await dio.get(url + '/review/get-review-by-product-id/$id_barang');
-      print(response.data);
-      return response.data;
-    } catch (e) {
-      print(e);
-      if(e is DioError){
+      if (e is DioError) {
         print(e.response!.data);
         print(e.response!.statusCode);
       }
     }
   }
 
+  Future getReviewByProduct() async {
+    try {
+      SharedPreferences id = await SharedPreferences.getInstance();
+      String id_barang = id.getString('id_barang')!;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('token')!;
+      var dio = Dio();
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var response =
+          await dio.get(url + '/review/get-review-by-product-id/$id_barang');
+      print(response.data);
+      return response.data;
+    } catch (e) {
+      print(e);
+      if (e is DioError) {
+        print(e.response!.data);
+        print(e.response!.statusCode);
+      }
+    }
+  }
 
   Future addFavorite(id_barang) async {
     try {
@@ -213,7 +214,10 @@ class _DetailPageState extends State<DetailPage> {
                                         width: 50,
                                         height: 50,
                                         child: OutlinedButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            addFavorite(snapshot
+                                                .data['products']['_id']);
+                                          },
                                           child: Icon(
                                             Icons.favorite_outline,
                                             color: Colors.black,
@@ -300,23 +304,23 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                   ),
                                 ),
-                                Container(
-                                    margin: const EdgeInsets.only(top: 25),
-                                    alignment: Alignment.topLeft,
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          'Kandungan :',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        // Text(
-                                        //   product.ingredients,
-                                        //   textAlign: TextAlign.start,
-                                        // ),
-                                      ],
-                                    )),
+                                // Container(
+                                //     margin: const EdgeInsets.only(top: 25),
+                                //     alignment: Alignment.topLeft,
+                                //     child: Column(
+                                //       children: [
+                                //         Text(
+                                //           'Kandungan :',
+                                //           style: TextStyle(
+                                //               fontSize: 16,
+                                //               fontWeight: FontWeight.w600),
+                                //         ),
+                                //         // Text(
+                                //         //   product.ingredients,
+                                //         //   textAlign: TextAlign.start,
+                                //         // ),
+                                //       ],
+                                //     )),
                                 Container(
                                   margin:
                                       const EdgeInsets.symmetric(vertical: 25),
@@ -548,10 +552,11 @@ class _DetailPageState extends State<DetailPage> {
                                   child: FutureBuilder(
                                     future: getReviewByProduct(),
                                     builder: (context, snapshot) {
-                                      if(snapshot.hasData){
+                                      if (snapshot.hasData) {
                                         return ListView.builder(
                                           scrollDirection: Axis.vertical,
-                                          itemCount: snapshot.data['reviews'].length,
+                                          itemCount:
+                                              snapshot.data['reviews'].length,
                                           itemBuilder: (context, index) {
                                             return Container(
                                               child: Column(
@@ -561,37 +566,47 @@ class _DetailPageState extends State<DetailPage> {
                                                     child: Column(children: [
                                                       Row(
                                                         mainAxisAlignment:
-                                                            MainAxisAlignment.spaceBetween,
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
                                                         children: [
                                                           Text(
-                                                            snapshot.data['reviews'][index]['nama_akun'],
+                                                            snapshot.data[
+                                                                        'reviews']
+                                                                    [index]
+                                                                ['nama_akun'],
                                                             style: TextStyle(
                                                                 fontSize: 15,
                                                                 fontWeight:
-                                                                    FontWeight.w500),
+                                                                    FontWeight
+                                                                        .w500),
                                                           ),
                                                           Container(
                                                             child: Row(
                                                               children: [
                                                                 Icon(
                                                                   Icons.star,
-                                                                  color: Color(0xff51AD99),
+                                                                  color: Color(
+                                                                      0xff51AD99),
                                                                 ),
                                                                 Icon(
                                                                   Icons.star,
-                                                                  color: Color(0xff51AD99),
+                                                                  color: Color(
+                                                                      0xff51AD99),
                                                                 ),
                                                                 Icon(
                                                                   Icons.star,
-                                                                  color: Color(0xff51AD99),
+                                                                  color: Color(
+                                                                      0xff51AD99),
                                                                 ),
                                                                 Icon(
                                                                   Icons.star,
-                                                                  color: Color(0xff51AD99),
+                                                                  color: Color(
+                                                                      0xff51AD99),
                                                                 ),
                                                                 Icon(
                                                                   Icons.star,
-                                                                  color: Colors.grey,
+                                                                  color: Colors
+                                                                      .grey,
                                                                 ),
                                                               ],
                                                             ),
@@ -599,14 +614,19 @@ class _DetailPageState extends State<DetailPage> {
                                                         ],
                                                       ),
                                                       Container(
-                                                        margin:
-                                                            const EdgeInsets.only(top: 13),
-                                                        alignment: Alignment.topLeft,
+                                                        margin: const EdgeInsets
+                                                            .only(top: 13),
+                                                        alignment:
+                                                            Alignment.topLeft,
                                                         child: Text(
-                                                          snapshot.data['reviews'][index]['review'],
+                                                          snapshot.data[
+                                                                  'reviews']
+                                                              [index]['review'],
                                                           style: TextStyle(
                                                               fontSize: 13,
-                                                              fontWeight: FontWeight.w400),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
                                                         ),
                                                       ),
                                                     ]),
@@ -616,7 +636,7 @@ class _DetailPageState extends State<DetailPage> {
                                             );
                                           },
                                         );
-                                      }else{
+                                      } else {
                                         return Container(
                                           child: Text('No Review'),
                                         );
@@ -652,7 +672,10 @@ class _DetailPageState extends State<DetailPage> {
                                           width: 198,
                                           height: 57,
                                           child: ElevatedButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              addFavorite(snapshot
+                                                  .data['products']['_id']);
+                                            },
                                             child: Text(
                                               'Add To Favorite',
                                               style: TextStyle(
