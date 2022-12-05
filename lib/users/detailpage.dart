@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,8 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:glowskin_project/model/product.dart';
 import 'package:glowskin_project/users/landingpage2.dart';
 
-class DetailPage extends StatelessWidget {
-  // String url = Platform.isAndroid ? "http://192.168.1.24:3001" : 'http://localhost:3001';
+class DetailPage extends StatefulWidget {
+  @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
   String url =
       'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
 
@@ -23,6 +26,60 @@ class DetailPage extends StatelessWidget {
       return response.data;
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future addFavorite(id_barang) async {
+    try {
+      var dio = Dio();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token')!;
+      print(token);
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      dio.options.headers["Authorization"] = "Bearer $token";
+      SharedPreferences id = await SharedPreferences.getInstance();
+      var response = await dio.post(url + '/favorite/add-favorite',
+          data: {"id_akun": id.getString('userID'), "id_barang": id_barang});
+      print(response.data);
+      AlertDialog alert = AlertDialog(
+        title: Text('Success'),
+        content: Text('Product berhasil ditambahkan ke favorit'),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'))
+        ],
+      );
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
+      return response.data;
+    } catch (e) {
+      print(e);
+      if (e is DioError) {
+        print(e.response!.data);
+        AlertDialog alert = AlertDialog(
+          title: Text('Error'),
+          content: Text(e.response!.data['error']['message']),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'))
+          ],
+        );
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            });
+      }
     }
   }
 
@@ -87,7 +144,10 @@ class DetailPage extends StatelessWidget {
                                         width: 50,
                                         height: 50,
                                         child: OutlinedButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            addFavorite(snapshot
+                                                .data['products']['_id']);
+                                          },
                                           child: Icon(
                                             Icons.favorite_outline,
                                             color: Colors.black,
@@ -505,7 +565,10 @@ class DetailPage extends StatelessWidget {
                                           width: 198,
                                           height: 57,
                                           child: ElevatedButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              addFavorite(snapshot
+                                                  .data['products']['_id']);
+                                            },
                                             child: Text(
                                               'Add To Favorite',
                                               style: TextStyle(
