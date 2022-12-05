@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
       dio.options.headers["accept"] = "application/json";
       var response = await dio.post(url + '/user/login',
           data: {"email": email, "password": password});
-      // print(response.data['token']);
+      print(response.data['token']);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', response.data['token']);
       prefs.setString('email', response.data['email']);

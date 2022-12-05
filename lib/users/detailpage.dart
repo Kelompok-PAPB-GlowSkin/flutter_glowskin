@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -96,6 +95,61 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
+
+  Future addFavorite(id_barang) async {
+    try {
+      var dio = Dio();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token')!;
+      print(token);
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["accept"] = "application/json";
+      dio.options.headers["Authorization"] = "Bearer $token";
+      SharedPreferences id = await SharedPreferences.getInstance();
+      var response = await dio.post(url + '/favorite/add-favorite',
+          data: {"id_akun": id.getString('userID'), "id_barang": id_barang});
+      print(response.data);
+      AlertDialog alert = AlertDialog(
+        title: Text('Success'),
+        content: Text('Product berhasil ditambahkan ke favorit'),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'))
+        ],
+      );
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
+      return response.data;
+    } catch (e) {
+      print(e);
+      if (e is DioError) {
+        print(e.response!.data);
+        AlertDialog alert = AlertDialog(
+          title: Text('Error'),
+          content: Text(e.response!.data['error']['message']),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'))
+          ],
+        );
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     getReviewByProduct();
@@ -158,7 +212,10 @@ class _DetailPageState extends State<DetailPage> {
                                         width: 50,
                                         height: 50,
                                         child: OutlinedButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            addFavorite(snapshot
+                                                .data['products']['_id']);
+                                          },
                                           child: Icon(
                                             Icons.favorite_outline,
                                             color: Colors.black,
@@ -597,7 +654,10 @@ class _DetailPageState extends State<DetailPage> {
                                           width: 198,
                                           height: 57,
                                           child: ElevatedButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              addFavorite(snapshot
+                                                  .data['products']['_id']);
+                                            },
                                             child: Text(
                                               'Add To Favorite',
                                               style: TextStyle(
