@@ -107,9 +107,9 @@ class _DetailPageState extends State<DetailPage> {
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers["accept"] = "application/json";
       dio.options.headers["Authorization"] = "Bearer $token";
-      SharedPreferences id = await SharedPreferences.getInstance();
+      SharedPreferences akun = await SharedPreferences.getInstance();
       var response = await dio.post(url + '/favorite/add-favorite',
-          data: {"id_akun": id.getString('userID'), "id_barang": id_barang});
+          data: {"id_akun": akun.getString('userID'), "id_barang": id_barang});
       print(response.data);
       AlertDialog alert = AlertDialog(
         title: Text('Success'),
@@ -151,6 +151,7 @@ class _DetailPageState extends State<DetailPage> {
       }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
