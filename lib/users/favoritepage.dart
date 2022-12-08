@@ -5,6 +5,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:glowskin_project/model/product.dart';
 import 'package:glowskin_project/users/detailpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
+
 
 enum Actions { delete }
 
@@ -14,8 +16,7 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
-  String url =
-      'https://6b84-2001-448a-6000-2dd-21ad-b7a5-51c6-d7c2.ap.ngrok.io';
+  String url = Platform.isAndroid ? "http://192.168.1.35:3001" : 'http://localhost:3001';
 
   Future getFavoriteByUser() async {
     try {
