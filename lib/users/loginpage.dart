@@ -49,12 +49,12 @@ class _LoginPageState extends State<LoginPage> {
   Future login() async {
     try {
       var dio = Dio();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers["accept"] = "application/json";
       var response = await dio.post(url + '/user/login',
           data: {"email": email, "password": password});
-      print(response.data['token']);
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      print(response.data);
       prefs.setString('token', response.data['token']);
       prefs.setString('email', response.data['email']);
       // print(prefs.getString('token'));
@@ -79,6 +79,7 @@ class _LoginPageState extends State<LoginPage> {
           return alert;
         },
       );
+      return response.data;
     } catch (e) {
       if (e is DioError) {
         // print(e.response!.data);

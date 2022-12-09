@@ -98,12 +98,12 @@ class _HomePageState extends State<HomePage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token')!;
       print(token);
-      SharedPreferences akun = await SharedPreferences.getInstance();
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers["accept"] = "application/json";
       dio.options.headers["Authorization"] = "Bearer $token";
+      SharedPreferences akun = await SharedPreferences.getInstance();
       var response = await dio.post(url + '/favorite/add-favorite',
-          data: {"id_akun": akun.getString('id_akun'), "id_barang": id_barang});
+          data: {"id_akun": akun.getString('userID'), "id_barang": id_barang});
       print(response.data);
       AlertDialog alert = AlertDialog(
         title: Text('Success'),
