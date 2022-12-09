@@ -70,8 +70,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
       var response = await dio.put(url + '/user/update-user/$id',
           data: {"name": _nama, "email": _email});
       print(response.data);
-      // return response.data;
-      Navigator.of(context).pop();
+      AlertDialog alert = AlertDialog(
+        title: Text("Pemberitahuan"),
+        content: Text("Data berhasil diubah!"),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Ok"))
+        ],
+      );
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          });
+      return response.data;
     } catch (e) {
       print(e);
       // if(e is DioError){

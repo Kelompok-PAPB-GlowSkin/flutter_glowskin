@@ -1,14 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:glowskin_project/unused/cardproduct.dart';
-import 'package:glowskin_project/model/product.dart';
 import 'package:glowskin_project/users/detailpage.dart';
 import 'package:glowskin_project/widgets/widget_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:glowskin_project/users/profilepage.dart';
-import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
-import 'dart:io';
 
 import 'package:glowskin_project/users/search.dart';
 
@@ -104,12 +98,12 @@ class _HomePageState extends State<HomePage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token')!;
       print(token);
+      SharedPreferences akun = await SharedPreferences.getInstance();
       dio.options.headers['content-Type'] = 'application/json';
       dio.options.headers["accept"] = "application/json";
       dio.options.headers["Authorization"] = "Bearer $token";
-      SharedPreferences id = await SharedPreferences.getInstance();
       var response = await dio.post(url + '/favorite/add-favorite',
-          data: {"id_akun": id.getString('userID'), "id_barang": id_barang});
+          data: {"id_akun": akun.getString('id_akun'), "id_barang": id_barang});
       print(response.data);
       AlertDialog alert = AlertDialog(
         title: Text('Success'),

@@ -21,7 +21,8 @@ class _FavoritePageState extends State<FavoritePage> {
     try {
       var dio = Dio();
       final prefs = await SharedPreferences.getInstance();
-      var userID = prefs.getString('userID')!;
+      final akun = await SharedPreferences.getInstance();
+      var userID = prefs.getString('id_akun')!;
       var token = prefs.getString('token')!;
       // print(token);
       dio.options.headers['content-Type'] = 'application/json';
